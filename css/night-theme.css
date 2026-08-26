@@ -1,0 +1,59 @@
+/* Biblioteca Noturna: direção visual azul-noite, marfim e dourado. */
+:root{
+  --green:#102b49;
+  --green2:#183d61;
+  --cream:#eef3f8;
+  --paper:#ffffff;
+  --ink:#10233d;
+  --muted:#64748b;
+  --line:#d9e2ec;
+  --gold:#c9953d;
+  --shadow:0 14px 35px rgba(16,43,73,.10);
+}
+body{background:linear-gradient(135deg,#eef3f8 0%,#f8fafc 52%,#e9f0f7 100%);color:var(--ink)}
+.app{background:transparent}
+.sidebar{background:linear-gradient(180deg,#071d35 0%,#102f50 72%,#0b2744 100%);color:#f8fbff;position:relative;overflow:hidden}
+.sidebar:after{content:"✦  ·    ✧       ·  ✦";position:absolute;left:24px;bottom:245px;color:#dcb15c;letter-spacing:12px;font-size:14px;opacity:.65;pointer-events:none}
+.logo-block{color:#f0c873;position:relative;z-index:1}
+.logo-emblem{font-size:0;width:42px;height:42px;position:relative}
+.logo-emblem:before{content:"";position:absolute;left:4px;top:1px;width:29px;height:29px;border:3px solid #edc269;border-right-color:transparent;border-radius:50%}
+.logo-emblem:after{content:"✦";position:absolute;right:0;top:0;color:#edc269;font-size:15px}
+.logo-block strong{color:#f6d27b}
+.sidebar nav button{color:#e6eef7;border:1px solid transparent}
+.sidebar nav button.active{background:linear-gradient(90deg,#1d466e,#173a5b);border-left:2px solid #e6b957;color:#fff}
+.sidebar nav button:hover{background:#153b5e}
+.quote-card{background:rgba(255,255,255,.04);border-color:rgba(226,181,91,.65);color:#f4f7fa}
+.quote-card:before{content:"☾  ✦";position:absolute;right:13px;top:12px;color:#d9ad58;font-family:Georgia,serif;font-size:18px}
+.profile-mini{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.22)}
+.admin-button{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.27)}
+.main{position:relative;overflow:hidden;background:#f9fbfd;padding:34px 40px 52px}
+.main:before{content:"✦     ·        ✧          ·      ✦";position:absolute;right:7%;top:18px;color:#c9953d;letter-spacing:16px;font-size:12px;opacity:.6;pointer-events:none}
+.main:after{content:"";position:absolute;right:5%;top:22px;width:56px;height:56px;border-radius:50%;background:#d9ad58;box-shadow:-12px 4px 0 2px #eef3f8;opacity:.9;pointer-events:none}
+.greeting h1,.page-head h1{color:#0b2340}
+.greeting p,.page-head p{color:#5d6f84}
+.header-icons button{color:#bd8830;background:#fff;border:1px solid #e3eaf1}
+.panel{background:rgba(255,255,255,.93);border-color:#d9e2ec;box-shadow:var(--shadow)}
+.hero{position:relative;overflow:hidden;min-height:390px;padding:34px 38px;border:1px solid #e2e9f0}
+.hero:after{content:"☾  ✦   ·   ✧";position:absolute;right:22px;top:18px;color:#d4a14b;font:28px Georgia,serif;opacity:.75}
+.hero-tags span{background:#fff5df;color:#ad7929}.hero-tags b{background:#edf4fb;color:#275071}
+.hero h2,.card-heading h2{color:#10233d}.hero h3{color:#b77f2c}.hero p{color:#5e7187}.hero .primary{font-size:14px;padding:12px 18px}
+.hero-meta{color:#c18d36}.hero-meta b{color:#8190a1}.hero-meta strong{color:#19314d}
+.primary{background:#163b60;color:#fff}.primary:hover{background:#0d2c4c}.outline{border-color:#2b587e;color:#183d61}.soft{background:#edf4fa;color:#244c70}
+.availability-summary{background:#fff}.availability-summary:after{content:"✦  ☾  ·";position:absolute;right:18px;top:14px;color:#c9953d;font-size:16px}
+.availability-cards article{background:#f8fbfd;border-color:#d5e0eb}.availability-cards article.best{background:#f8fbfd;color:var(--ink)}
+.availability-cards article.best .availability-bar i{background:#183d61}.availability-bar i{background:#c9953d}
+.availability-cards article>span{color:#183d61}.availability-cards em{color:#8999aa}
+.card-heading small{background:#edf4fa;color:#275071}.upcoming-row.selected{background:#eef4f8}.upcoming-row>strong{background:#e7eef5;color:#183d61}.upcoming-row.selected>strong{background:#183d61;color:#f2c66f}.upcoming-row>b{color:#c9953d}
+.participant-row small{color:#2d6488}.participant-row b{color:#183d61}.avatar-row b{color:#183d61}
+.recent-row b{color:#bd8830}
+.calendar-box,.choices-box{background:#fff}.days button.selected,.schedule-calendar .days button.selected,.selected-days button{background:#183d61}.table-head{background:#edf4fa}.table-row input:checked+i{background:#183d61}
+.hint-box,.save-note{background:#edf3f8;color:#314a63}.save-note img{display:none}
+.club-message{background:#f8fbfd}.bookshelf{background:linear-gradient(180deg,#102f50,#173f65);border-color:#234f77;box-shadow:inset 0 -14px 0 #0b2744}.bookshelf button{color:#f2f5f8}.bookshelf img{box-shadow:5px 8px 12px rgba(5,21,39,.4)}
+.draw-box{background:#102f50}.about-hero{background:#f8fbfd}.about-hero h2{color:#10233d}.about-stats div{border-color:#d7e2ec}.modal-backdrop{background:rgba(5,20,37,.75)}.modal{background:#f7fafc}.form-grid input,.form-grid textarea,.modal>label input{background:#fff;border-color:#d5e0eb}.toast{background:#183d61}
+.mobile-nav{background:rgba(255,255,255,.97);border-color:#d9e2ec}.mobile-nav button.active{color:#183d61}
+.page-head h1,.choice-hero h2,.calendar-box h2,.choices-box h2,.section-title h2,.history-row h2,.person-card h2{color:#10233d}
+.eyebrow{color:#b27c27}.link-btn{color:#183d61}
+.top-grid{grid-template-columns:minmax(0,1fr) 360px}.dashboard-grid{grid-template-columns:minmax(0,1fr) 360px}
+.dashboard-grid>.panel{border-radius:18px}.bottom-grid{grid-template-columns:1fr 1fr 1fr}
+.deco,.corner-illustration,.club-message img{opacity:.18;filter:hue-rotate(145deg) saturate(.65)}
+@media(max-width:900px){.main:after{display:none}.main:before{top:5px;right:15px}.sidebar:after{display:none}}

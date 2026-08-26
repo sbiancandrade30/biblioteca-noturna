@@ -1,0 +1,8 @@
+/* Nome livre, datas selecionadas compactas e título com melhor leitura. */
+.participant-picker input{width:100%;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font:inherit;padding:13px;min-height:44px}
+.participant-picker input:focus{outline:2px solid rgba(40,93,142,.22);border-color:var(--blue)}
+.selected-chips{display:flex;flex-wrap:wrap;gap:7px;padding:0!important;border:0!important}
+.selected-chip{display:inline-flex!important;align-items:center;border:1px solid #d9e5ef;border-radius:999px;padding:7px 10px!important;background:#fff;color:var(--blue);font-size:12px;font-weight:600}
+.summary{padding:14px}.summary h3{margin-bottom:10px}
+@media(min-width:820px){.intro{max-width:none}.intro h1{white-space:nowrap;font-size:39px}.intro p{max-width:770px}}
+@media(max-width:700px){.intro h1{white-space:normal}.selected-chip{font-size:11px;padding:6px 9px!important}}

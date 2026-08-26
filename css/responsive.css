@@ -1,0 +1,51 @@
+/* Ajustes finais de responsividade para celular, tablet e computador. */
+html,body{max-width:100%;overflow-x:hidden}
+button,select{min-height:44px}
+.calendar button{min-height:42px}
+.period-buttons{min-width:0}
+.result-row{min-width:0}
+
+@media(max-width:519px){
+  .app-shell{padding:0 12px 36px}
+  .brand-header{margin:0 -12px;min-height:112px;border-radius:0 0 12px 12px}
+  .brand-logo{width:132px;max-height:88px}
+  .stars{right:14px;top:13px;font-size:11px}
+  .intro{padding:27px 4px 20px}
+  .intro h1{font-size:35px;line-height:1.03}
+  .intro p{font-size:14px;line-height:1.55}
+  .planner,.results-column>.card{padding:18px}
+  .section-heading{margin-bottom:18px}
+  .section-heading h2{font-size:27px}
+  .moon-mark{font-size:36px}
+  .calendar-toolbar{margin-top:22px}
+  .calendar button{font-size:13px;border-radius:7px}
+  .weekday-row span{font-size:9px}
+  .period-buttons{gap:6px}
+  .period-button{padding:10px 4px;font-size:12px}
+  .best-option h2,.responses h2,.group-results h2{font-size:25px}
+  .result-row>div{align-items:flex-start}
+  .result-row b{font-size:12px;text-align:right}
+  .details-dialog{padding:18px}
+}
+
+@media(min-width:520px) and (max-width:819px){
+  .app-shell{padding:24px 24px 48px}
+  .brand-header{min-height:138px}
+  .brand-logo{width:160px;max-height:110px}
+  .workspace{grid-template-columns:1fr}
+  .planner{padding:26px}
+  .results-column{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}
+  .group-results{grid-column:1/-1}
+}
+
+@media(min-width:820px) and (max-width:1120px){
+  .app-shell{padding-right:24px;padding-left:242px}
+  .brand-header{width:204px}
+  .workspace{grid-template-columns:minmax(410px,1fr) minmax(290px,.82fr)}
+  .planner{padding:24px}
+}
+
+@media(min-width:1121px){
+  .workspace{grid-template-columns:minmax(560px,1.17fr) minmax(350px,.83fr)}
+  .calendar button{min-height:50px}
+}

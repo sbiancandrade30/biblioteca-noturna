@@ -1,0 +1,1 @@
+.home-library .eyebrow{display:none}.month-grid{display:grid!important;grid-template-columns:repeat(7,1fr)!important;gap:5px!important}.month-grid span{height:29px!important;font-size:11px}.month-grid span.marked{background:#d8e5dc!important;color:#174c40!important;font-weight:700}.mini-month{min-width:0}

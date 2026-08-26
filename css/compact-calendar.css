@@ -1,0 +1,17 @@
+/* No computador, o calendário precisa informar sem ocupar a página inteira. */
+@media(min-width:820px){
+  .intro{padding-bottom:16px}
+  .workspace{gap:16px}
+  .planner{padding:22px}
+  .section-heading{margin-bottom:16px}
+  .calendar-toolbar{margin:19px 0 2px}
+  .calendar{gap:4px}
+  .calendar button{aspect-ratio:auto;min-height:42px;height:42px;font-size:14px}
+  .weekday-row span{padding:4px 0}
+  .field-note{margin-top:6px}
+  .results-column{gap:14px}
+  .results-column>.card{padding:18px}
+  .best-option h2,.responses h2,.group-results h2{font-size:24px}
+  .avatar-list{margin:10px 0 7px}
+  .result-row{padding:11px 0}
+}

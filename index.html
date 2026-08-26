@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#081d35">
+  <title>Biblioteca Noturna — Próximo Encontro</title>
+  <link rel="icon" type="image/png" href="assets/brand-favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/poll.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/compact-calendar.css">
+  <link rel="stylesheet" href="css/name-and-summary.css">
+  <link rel="stylesheet" href="css/mobile-compact.css">
+  <link rel="stylesheet" href="css/people-tooltips.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="brand-header"><img src="assets/brand-logo.png" alt="Biblioteca Noturna — Clube do Livro" class="brand-logo"><div class="stars" aria-hidden="true">✦ &nbsp;·&nbsp; ✧</div></header>
+    <section class="intro"><span class="eyebrow desktop-only">PRÓXIMO ENCONTRO</span><h1>Vamos marcar nosso próximo encontro?</h1><p>Marque os dias que você pode. Assim encontramos a melhor data para todas.</p></section>
+    <section class="workspace" aria-label="Organização do encontro">
+      <div class="planner card">
+        <div class="section-heading"><div><span class="eyebrow desktop-only">SUA RESPOSTA</span><h2>Quando você pode?</h2></div><span class="moon-mark" aria-hidden="true">☾</span></div>
+        <div class="participant-picker"><label class="desktop-only" for="participantName">Quem está respondendo?</label><select id="participantName" aria-label="Selecione seu nome"><option value="">Selecione seu nome</option><option>Ana Cristina</option><option>Bianca</option><option>Larissa</option><option>Luana</option><option>Maria Eduarda</option><option>Pricila</option><option>Rhullya</option><option>Tainara</option></select><p id="replaceNotice" class="field-note" hidden></p></div>
+        <div class="calendar-toolbar"><button class="icon-button" id="previousMonth" aria-label="Mês anterior">‹</button><strong id="monthTitle"></strong><button class="icon-button" id="nextMonth" aria-label="Próximo mês">›</button></div>
+        <div class="weekday-row" aria-hidden="true"><span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span></div><div id="calendar" class="calendar" aria-label="Calendário"></div><p class="field-note">Toque em todos os dias em que você consegue participar.</p>
+        <section id="summary" class="summary" hidden></section><button id="saveButton" class="primary-button" disabled>Salvar minha disponibilidade</button><p id="saveMessage" class="save-message" aria-live="polite"></p>
+      </div>
+      <aside class="results-column"><section class="card best-option" id="bestOption"></section><section class="card responses" id="responses"></section><section class="card group-results" id="groupResults"></section></aside>
+    </section>
+  </main>
+  <dialog id="detailsDialog" class="details-dialog"><div id="detailsContent"></div><button id="closeDialog" class="text-button">Fechar</button></dialog>
+  <script src="js/poll.js"></script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+/* Interface limpa: remove ilustrações decorativas, mantendo capas e avatares. */
+img[src*="illustrations/"]{display:none!important}
+.hero-art,.deco,.corner-illustration,.deco-head{display:none!important}
+.about-hero{grid-template-columns:1fr!important}.about-memory{min-height:120px!important}

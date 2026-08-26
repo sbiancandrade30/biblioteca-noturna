@@ -1,0 +1,14 @@
+/* Cabeçalho e introdução mais econômicos para a experiência no celular. */
+@media(max-width:519px){
+  .desktop-only{display:none!important}
+  .brand-header{min-height:112px;border-radius:0;margin:0 -12px;padding:6px 12px}
+  .brand-header:before,.brand-header:after{display:none}
+  .brand-logo{width:210px;max-height:108px}
+  .stars{right:13px;top:12px;font-size:10px}
+  .intro{padding:20px 4px 16px}
+  .intro h1{font-size:30px;line-height:1.04;margin:5px 0 7px}
+  .intro p{font-size:13.5px;line-height:1.4;max-width:360px}
+  .intro .eyebrow{font-size:10px}
+  .planner{padding-top:17px}
+  .section-heading{margin-bottom:14px}
+}
