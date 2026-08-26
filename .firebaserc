@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "clube-do-livro-bn"
-  }
+  },
+  "targets": {
+    "clube-do-livro-bn": {
+      "hosting": {
+        "biblioteca-noturna": [
+          "biblioteca-noturna"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
