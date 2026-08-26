@@ -1,12 +1,11 @@
 /* Participantes sem número fixo e confirmação discreta do nome. */
 .best-choice strong{color:#fff}.best-choice{padding:16px 0 2px}.best-choice span{color:#dce9f4}
 .avatar{width:34px!important;height:34px!important;min-width:34px;min-height:34px;flex:0 0 34px;padding:0;line-height:1;cursor:default;font:inherit;appearance:none}
-.responses h2{font:600 20px/1.25 "DM Sans",sans-serif;letter-spacing:0}
-.responses .avatar-list{margin:12px 0 0;flex-wrap:nowrap;gap:5px}
-.responses .avatar{width:30px!important;height:30px!important;min-width:30px;min-height:30px;flex:0 0 30px!important;font-size:10px}
+.responses .avatar-list{margin:12px 0 0;flex-wrap:nowrap}
 .responses .pending{margin-top:16px;line-height:1.45}
 .calendar+.field-note{margin:18px 0 14px}
 @media (hover:hover){.avatar[data-person-name]{position:relative;cursor:help}.avatar[data-person-name]::after{content:attr(data-person-name);position:absolute;left:50%;bottom:calc(100% + 9px);z-index:5;transform:translateX(-50%) translateY(3px);opacity:0;pointer-events:none;white-space:nowrap;border-radius:6px;background:#081d35;color:#fff;padding:6px 8px;font:600 11px "DM Sans",sans-serif;box-shadow:0 5px 14px rgba(6,23,42,.18);transition:.16s ease}.avatar[data-person-name]:hover::after,.avatar[data-person-name]:focus-visible::after{opacity:1;transform:translateX(-50%) translateY(0)}}
 @media (hover:none){.avatar[data-person-name]{position:relative}.avatar[data-person-name]::after{content:attr(data-person-name);position:absolute;left:50%;bottom:calc(100% + 9px);z-index:5;transform:translateX(-50%) translateY(3px);opacity:0;pointer-events:none;white-space:nowrap;border-radius:6px;background:#081d35;color:#fff;padding:6px 8px;font:600 11px "DM Sans",sans-serif;box-shadow:0 5px 14px rgba(6,23,42,.18);transition:.16s ease}.avatar.show-tooltip::after{opacity:1;transform:translateX(-50%) translateY(0)}}
 @media (max-width:519px){.result-row>div:first-child{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px}.result-row strong,.result-row b{white-space:nowrap;font-size:13px}}
-@media (max-width:519px){.responses .pending{margin-top:17px}}
+@media (max-width:519px){.responses .avatar-list{gap:5px}.responses .avatar{width:30px!important;height:30px!important;min-width:30px;min-height:30px;flex:0 0 30px!important;font-size:10px}.responses .pending{margin-top:17px}}
+@media (min-width:1200px){.workspace{grid-template-columns:minmax(430px,1.02fr) minmax(390px,.98fr)}}
