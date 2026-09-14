@@ -103,11 +103,15 @@ function subscribeToResponses() {
         return [fields.name?.stringValue, (fields.dates?.arrayValue?.values || []).map(date => date.stringValue)];
       }).filter(([name]) => name));
       applyResponseValues(values);
-    } catch (error) { console.error(error); }
+    } catch (error) {
+      console.error(error);
+      qs("#saveMessage").textContent = "Não foi possível carregar as respostas. Atualize a página e tente novamente.";
+    }
   };
   getDocs(responsesCollection).then(applyResponses).catch(error => { console.error(error); qs("#saveMessage").textContent = "Não foi possível carregar as respostas da votação."; });
   unsubscribeResponses = onSnapshot(responsesCollection, applyResponses, error => { console.error(error); qs("#saveMessage").textContent = "A votação online não pôde ser atualizada."; });
   loadResponsesDirectly();
+  window.setTimeout(loadResponsesDirectly, 1200);
   refresh();
 }
 qs("#participantName").addEventListener("change", syncName);
