@@ -2,7 +2,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/fireba
 import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getFirestore, doc, onSnapshot, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-const ADMIN_EMAIL = "sbiancandrade@gmail.com";
+const ADMIN_EMAILS = ["sbiancandrade@gmail.com"];
 const qs = selector => document.querySelector(selector);
 const formatter = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric" });
 let auth, db, unsubscribe = null;
@@ -10,11 +10,12 @@ let auth, db, unsubscribe = null;
 function prettyMonth(value) { const [year, monthNumber] = value.split("-").map(Number); return formatter.format(new Date(year, monthNumber - 1, 1)).replace(/^(.)/, (_, character) => character.toUpperCase()); }
 function setMessage(message, error = false) { const output = qs("#adminMessage"); output.textContent = message; output.style.color = error ? "#a13e32" : "#226149"; }
 function showAdmin(user) {
-  const allowed = user?.email?.toLowerCase() === ADMIN_EMAIL;
+  const email = String(user?.email || "").trim().toLowerCase();
+  const allowed = ADMIN_EMAILS.includes(email);
   qs("#loginCard").hidden = allowed;
   qs("#adminPanel").hidden = !allowed;
   qs("#switchAccountButton").hidden = !user || allowed;
-  if (!allowed && user) qs("#loginMessage").textContent = `A conta ${user.email} não tem acesso à administração.`;
+  if (!allowed && user) qs("#loginMessage").textContent = `A conta ${email} não tem acesso à administração.`;
   if (!user) qs("#loginMessage").textContent = "";
   if (allowed) subscribeToActivePoll();
 }
