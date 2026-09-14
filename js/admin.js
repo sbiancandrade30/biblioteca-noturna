@@ -5,7 +5,7 @@ import { getFirestore, collection, deleteDoc, doc, onSnapshot, serverTimestamp, 
 const ADMIN_EMAILS = ["sbiancandrade@gmail.com"];
 const qs = selector => document.querySelector(selector);
 const formatter = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric" });
-let auth, db, unsubscribe = null, unsubscribeResponses = null;
+let auth, db, unsubscribe = null, unsubscribeResponses = null, activeResponses = new Map();
 let loginInProgress = false;
 let activePollKey = "", activePollClosed = false;
 
@@ -15,8 +15,9 @@ function setMessage(message, error = false) { const output = qs("#adminMessage")
 function setResponsesMessage(message, error = false) { const output = qs("#responsesAdminMessage"); output.textContent = message; output.style.color = error ? "#a13e32" : "#226149"; }
 function renderResponseList(snapshot) {
   const responses = snapshot.docs.map(item => ({ name: item.data().name || item.id, dates: item.data().dates || [] })).sort((first, second) => first.name.localeCompare(second.name, "pt-BR"));
+  activeResponses = new Map(responses.map(response => [response.name, response.dates]));
   qs("#adminResponsesList").innerHTML = responses.length
-    ? responses.map(response => `<article class="admin-response-row"><div><strong>${response.name}</strong><span>${response.dates.length ? response.dates.map(prettyDate).join(" · ") : "Nenhuma data marcada"}</span></div><button type="button" class="remove-response-button" data-response-name="${response.name}">Apagar resposta</button></article>`).join("")
+    ? responses.map(response => `<article class="admin-response-row"><strong>${response.name}</strong><div class="admin-response-dates">${response.dates.map(date => `<button type="button" class="remove-date-button" data-response-name="${response.name}" data-response-date="${date}" aria-label="Remover ${prettyDate(date)} de ${response.name}"><span>${prettyDate(date)}</span><b aria-hidden="true">×</b></button>`).join("")}</div></article>`).join("")
     : "<p class='field-note'>Ainda não há respostas nesta votação.</p>";
 }
 function subscribeToPollResponses() {
@@ -117,18 +118,26 @@ qs("#switchAccountButton").onclick = async () => {
   await openGoogleLogin();
 };
 qs("#adminResponsesList").onclick = async event => {
-  const button = event.target.closest("[data-response-name]");
+  const button = event.target.closest("[data-response-name][data-response-date]");
   if (!button) return;
   const name = button.dataset.responseName;
-  if (!window.confirm(`Apagar a resposta de ${name}? Ela poderá preencher uma nova resposta depois.`)) return;
+  const date = button.dataset.responseDate;
+  const dates = activeResponses.get(name) || [];
+  if (!dates.includes(date)) return;
+  if (!window.confirm(`Remover ${prettyDate(date)} da resposta de ${name}?`)) return;
   button.disabled = true;
   setResponsesMessage("");
   try {
-    await deleteDoc(doc(db, "polls", `encontro-${activePollKey}`, "responses", name));
-    setResponsesMessage(`A resposta de ${name} foi apagada.`);
+    const remainingDates = dates.filter(value => value !== date);
+    if (remainingDates.length) {
+      await setDoc(doc(db, "polls", `encontro-${activePollKey}`, "responses", name), { name, dates: remainingDates, updatedAt: serverTimestamp() });
+    } else {
+      await deleteDoc(doc(db, "polls", `encontro-${activePollKey}`, "responses", name));
+    }
+    setResponsesMessage(`${prettyDate(date)} foi removido da resposta de ${name}.`);
   } catch (error) {
     console.error(error);
-    setResponsesMessage("Não foi possível apagar esta resposta.", true);
+    setResponsesMessage("Não foi possível remover esta data.", true);
     button.disabled = false;
   }
 };

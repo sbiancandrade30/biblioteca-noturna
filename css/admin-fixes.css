@@ -92,47 +92,50 @@
 }
 
 .admin-response-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
+  display: grid;
+  gap: 9px;
   padding: 11px 12px;
   border: 1px solid #e1eaf2;
   border-radius: 9px;
   background: #f8fafc;
 }
 
-.admin-response-row strong,
-.admin-response-row span {
-  display: block;
-}
-
 .admin-response-row strong {
+  display: block;
   color: var(--blue);
   font-size: 14px;
 }
 
-.admin-response-row span {
-  margin-top: 2px;
-  color: var(--muted);
-  font-size: 12px;
+.admin-response-dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
-.remove-response-button {
-  flex: 0 0 auto;
+.remove-date-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   border: 1px solid #cba9a3;
   border-radius: 8px;
   background: #fff;
   color: #8b3d34;
-  padding: 7px 9px;
+  padding: 6px 8px;
   font: 600 12px "DM Sans", sans-serif;
 }
 
-.remove-response-button:hover:not(:disabled) {
+.remove-date-button b {
+  color: #a4473d;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: .7;
+}
+
+.remove-date-button:hover:not(:disabled) {
   background: #fff4f2;
 }
 
-.remove-response-button:disabled {
+.remove-date-button:disabled {
   opacity: .65;
 }
 
@@ -188,8 +191,4 @@
     margin-left: auto;
   }
 
-  .admin-response-row {
-    align-items: flex-start;
-    flex-direction: column;
-  }
 }
