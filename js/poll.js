@@ -9,7 +9,7 @@ const formatter = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numer
 const dayFormat = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long" });
 
 let remoteResponses = {}, db = null, firebaseReady = false, isSaving = false, unsubscribeResponses = null;
-let selectedName = "", draft = [], pollKey = "2026-09", month = new Date(2026, 8, 1);
+let selectedName = "", draft = [], pollKey = "2026-09", month = new Date(2026, 8, 1), pollClosed = false, chosenMeetingDate = "";
 
 function key(date) { return date.toISOString().slice(0, 10); }
 function pollId() { return `encontro-${pollKey}`; }
@@ -18,12 +18,15 @@ function initials(name) { return name.split(" ").map(word => word[0]).join("").s
 function prettyDate(dateKey) { return dayFormat.format(new Date(`${dateKey}T12:00:00`)).replace(/^(.)/, (_, character) => character.toUpperCase()); }
 function prettyMonth(value) { const [year, monthNumber] = value.split("-").map(Number); return formatter.format(new Date(year, monthNumber - 1, 1)).replace(/^(.)/, (_, character) => character.toUpperCase()); }
 function allResponses() { return { ...remoteResponses, ...(selectedName && draft.length ? { [selectedName]: draft } : {}) }; }
-function isPastPoll() { const today = new Date(); return pollDate() < new Date(today.getFullYear(), today.getMonth(), 1); }
+function isPastPoll() { const today = new Date(); return pollClosed || pollDate() < new Date(today.getFullYear(), today.getMonth(), 1); }
 
 function updateActivePoll() {
   const activeMonth = prettyMonth(pollKey);
   qs("#activePollLabel").textContent = `VOTAÇÃO DE ${activeMonth.toUpperCase()}`;
   qs("#publicPollTitle").textContent = activeMonth;
+  qs("#publicPollNotice").innerHTML = pollClosed && chosenMeetingDate
+    ? `<span>Próximo encontro confirmado para</span> <strong>${prettyDate(chosenMeetingDate)}</strong>`
+    : `<span>Votação aberta para o encontro de</span> <strong>${activeMonth}</strong>`;
   month = pollDate();
 }
 function renderCalendar() {
@@ -56,7 +59,9 @@ function tally() {
 function avatars(names, responded = names) { return names.map(name => `<button type="button" class="avatar ${responded.includes(name) ? "done" : ""}" data-person-name="${name}" aria-label="Ver nome de ${name}">${initials(name)}</button>`).join(""); }
 function renderResults() {
   const data = tally(), best = Math.max(0, ...data.map(item => item.people.size)), bests = data.filter(item => item.people.size === best);
-  qs("#bestOption").innerHTML = `<span class="eyebrow">MELHOR OPÇÃO ATÉ AGORA</span>${bests.length ? bests.map(item => `<div class="best-choice"><strong>${prettyDate(item.date)}</strong><span>${item.people.size} participantes podem</span></div>`).join("") : '<div class="best-choice"><span>Aguardando respostas.</span></div>'}`;
+  qs("#bestOption").innerHTML = pollClosed && chosenMeetingDate
+    ? `<span class="eyebrow">ENCONTRO CONFIRMADO</span><div class="best-choice"><strong>${prettyDate(chosenMeetingDate)}</strong><span>Data escolhida pelo clube</span></div>`
+    : `<span class="eyebrow">MELHOR OPÇÃO ATÉ AGORA</span>${bests.length ? bests.map(item => `<div class="best-choice"><strong>${prettyDate(item.date)}</strong><span>${item.people.size} participantes podem</span></div>`).join("") : '<div class="best-choice"><span>Aguardando respostas.</span></div>'}`;
   const responded = Object.keys(allResponses()), pending = participants.filter(name => !responded.includes(name));
   qs("#responses").innerHTML = `<span class="eyebrow">QUEM JÁ RESPONDEU</span><h2>${responded.length} de ${participants.length} responderam</h2><div class="avatar-list">${avatars(participants, responded)}</div><p class="pending">Ainda faltam: ${pending.join(", ") || "ninguém"}.</p>`;
   qs("#groupResults").innerHTML = `<span class="eyebrow">DISPONIBILIDADE DO GRUPO</span><h2>Possíveis datas</h2>${data.map(item => `<article class="result-row" data-result-date="${item.date}"><div><strong>${prettyDate(item.date)}</strong><b>${item.people.size} podem</b></div><div class="avatar-list" style="justify-content:flex-start;gap:5px;margin:10px 0 0">${avatars([...item.people])}</div></article>`).join("") || "<p class='field-note'>As respostas aparecerão aqui.</p>"}`;
@@ -74,7 +79,9 @@ function subscribeToResponses() {
   if (unsubscribeResponses) unsubscribeResponses();
   remoteResponses = {}; selectedName = ""; draft = [];
   qs("#participantName").value = "";
-  qs("#saveMessage").textContent = isPastPoll() ? "Esta votação está encerrada e disponível para consulta." : "";
+  qs("#saveMessage").textContent = pollClosed && chosenMeetingDate
+    ? `Votação encerrada. Encontro confirmado para ${prettyDate(chosenMeetingDate)}.`
+    : isPastPoll() ? "Esta votação está encerrada e disponível para consulta." : "";
   updateActivePoll();
   unsubscribeResponses = onSnapshot(collection(db, "polls", pollId(), "responses"), snapshot => {
     remoteResponses = Object.fromEntries(snapshot.docs.map(item => [item.data().name, item.data().dates || []]).filter(([name]) => participants.includes(name)));
@@ -122,7 +129,10 @@ async function initializeFirebase() {
   try {
     const app = initializeApp(config); db = getFirestore(app); await signInAnonymously(getAuth(app)); firebaseReady = true;
     onSnapshot(doc(db, "settings", "active-poll"), snapshot => {
-      const nextPoll = snapshot.data()?.key;
+      const poll = snapshot.data() || {};
+      const nextPoll = poll.key;
+      pollClosed = poll.status === "closed";
+      chosenMeetingDate = String(poll.chosenDate || "");
       if (/^\d{4}-(0[1-9]|1[0-2])$/.test(nextPoll || "") && nextPoll !== pollKey) pollKey = nextPoll;
       subscribeToResponses();
     }, error => { console.error(error); subscribeToResponses(); });

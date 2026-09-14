@@ -7,8 +7,10 @@ const qs = selector => document.querySelector(selector);
 const formatter = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric" });
 let auth, db, unsubscribe = null;
 let loginInProgress = false;
+let activePollKey = "", activePollClosed = false;
 
 function prettyMonth(value) { const [year, monthNumber] = value.split("-").map(Number); return formatter.format(new Date(year, monthNumber - 1, 1)).replace(/^(.)/, (_, character) => character.toUpperCase()); }
+function prettyDate(value) { return new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long" }).format(new Date(`${value}T12:00:00`)).replace(/^(.)/, (_, character) => character.toUpperCase()); }
 function setMessage(message, error = false) { const output = qs("#adminMessage"); output.textContent = message; output.style.color = error ? "#a13e32" : "#226149"; }
 function showAdmin(user) {
   const googleProfile = user?.providerData?.find(profile => profile.providerId === "google.com");
@@ -45,10 +47,25 @@ function showAdmin(user) {
 function subscribeToActivePoll() {
   if (unsubscribe) unsubscribe();
   unsubscribe = onSnapshot(doc(db, "settings", "active-poll"), snapshot => {
-    const key = snapshot.data()?.key || "2026-09";
+    const poll = snapshot.data() || { key: "2026-09", status: "open", chosenDate: null };
+    const key = poll.key || "2026-09";
+    activePollKey = key;
+    activePollClosed = poll.status === "closed";
     qs("#currentPollTitle").textContent = prettyMonth(key);
     qs("#adminPollMonth").value = key;
-    qs("#adminStatus").textContent = `A votação de ${prettyMonth(key)} está disponível para o grupo.`;
+    const chosenDate = String(poll.chosenDate || "");
+    const [year, month] = key.split("-").map(Number);
+    qs("#chosenMeetingDate").min = `${key}-01`;
+    qs("#chosenMeetingDate").max = `${key}-${String(new Date(year, month, 0).getDate()).padStart(2, "0")}`;
+    qs("#chosenMeetingDate").value = chosenDate;
+    qs("#chosenMeetingDate").disabled = activePollClosed;
+    qs("#closePollButton").disabled = activePollClosed;
+    qs("#closePollMessage").textContent = activePollClosed && chosenDate
+      ? `Encontro definido para ${prettyDate(chosenDate)}.`
+      : "";
+    qs("#adminStatus").textContent = activePollClosed && chosenDate
+      ? `A votação foi encerrada. Encontro confirmado para ${prettyDate(chosenDate)}.`
+      : `A votação de ${prettyMonth(key)} está disponível para o grupo.`;
   }, () => { qs("#adminStatus").textContent = "Não foi possível carregar a votação ativa."; });
 }
 async function openGoogleLogin() {
@@ -87,12 +104,22 @@ qs("#switchAccountButton").onclick = async () => {
 qs("#activatePollButton").onclick = async () => {
   const key = qs("#adminPollMonth").value;
   if (!key) { setMessage("Escolha um mês antes de continuar.", true); return; }
+  if (key === activePollKey) { setMessage("Escolha um mês diferente para criar uma nova votação.", true); return; }
   qs("#activatePollButton").disabled = true;
   try {
-    await setDoc(doc(db, "settings", "active-poll"), { key, updatedAt: serverTimestamp() });
+    await setDoc(doc(db, "settings", "active-poll"), { key, status: "open", chosenDate: null, updatedAt: serverTimestamp() });
     setMessage(`Votação de ${prettyMonth(key)} ativada com sucesso.`);
   } catch (error) { console.error(error); setMessage("Não foi possível ativar a votação.", true); }
   finally { qs("#activatePollButton").disabled = false; }
+};
+qs("#closePollButton").onclick = async () => {
+  const chosenDate = qs("#chosenMeetingDate").value;
+  if (!chosenDate) { qs("#closePollMessage").textContent = "Escolha a data do encontro antes de encerrar."; return; }
+  if (activePollClosed) return;
+  qs("#closePollButton").disabled = true;
+  try {
+    await setDoc(doc(db, "settings", "active-poll"), { key: activePollKey, status: "closed", chosenDate, updatedAt: serverTimestamp() });
+  } catch (error) { console.error(error); qs("#closePollMessage").textContent = "Não foi possível encerrar a votação."; qs("#closePollButton").disabled = false; }
 };
 const config = window.BIBLIOTECA_FIREBASE_CONFIG;
 if (!config) qs("#loginMessage").textContent = "A configuração do Firebase não foi encontrada.";

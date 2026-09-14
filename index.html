@@ -22,7 +22,7 @@
     <section class="intro"><span class="eyebrow desktop-only" id="activePollLabel">VOTAÇÃO ATIVA</span><h1>Vamos marcar nosso próximo encontro?</h1><p>Marque os dias que você pode. Assim encontramos a melhor data para todas.</p></section>
     <section class="workspace" aria-label="Organização do encontro">
       <div class="planner card">
-        <p class="poll-notice"><span>Votação aberta para o encontro de</span> <strong id="publicPollTitle">Setembro de 2026</strong></p>
+        <p class="poll-notice" id="publicPollNotice"><span>Votação aberta para o encontro de</span> <strong id="publicPollTitle">Setembro de 2026</strong></p>
         <div class="section-heading"><div><span class="eyebrow desktop-only">SUA RESPOSTA</span><h2>Quando você pode?</h2></div><span class="moon-mark" aria-hidden="true">☾</span></div>
         <div class="participant-picker"><label class="desktop-only" for="participantName">Quem está respondendo?</label><select id="participantName" aria-label="Selecione seu nome"><option value="">Selecione seu nome</option><option>Ana Cristina</option><option>Bianca</option><option>Larissa</option><option>Luana</option><option>Maria Eduarda</option><option>Pricila</option><option>Rhullya</option><option>Tainara</option></select><p id="replaceNotice" class="field-note" hidden></p></div>
         <div class="calendar-toolbar"><button class="icon-button" id="previousMonth" aria-label="Mês anterior">‹</button><strong id="monthTitle"></strong><button class="icon-button" id="nextMonth" aria-label="Próximo mês">›</button></div>
@@ -34,6 +34,6 @@
   </main>
   <dialog id="detailsDialog" class="details-dialog"><div id="detailsContent"></div><button id="closeDialog" class="text-button">Fechar</button></dialog>
   <script src="js/firebase-config.js"></script>
-  <script type="module" src="js/poll.js"></script>
+  <script type="module" src="js/poll.js?v=poll-closing-1"></script>
 </body>
 </html>

@@ -23,11 +23,12 @@
     <section id="adminPanel" class="card admin-card" hidden>
       <div class="panel-heading"><div><span class="eyebrow">VOTAÇÃO ATUAL</span><h2 id="currentPollTitle">Setembro de 2026</h2></div><div class="admin-account"><div class="admin-avatar"><img id="adminAvatar" alt=""><span id="adminInitial" aria-hidden="true">A</span></div><div class="admin-account-copy"><strong id="adminAccountName">Administradora</strong><span>Conta Google</span></div><button id="logoutButton" class="text-button" type="button">Sair</button></div></div>
       <div class="current-poll"><strong>Esta é a votação que as participantes veem agora.</strong><p id="adminStatus">Carregando votação ativa.</p></div>
+      <div class="close-poll" id="closePollSection"><span class="eyebrow">DEFINIR ENCONTRO</span><h2>Encerrar votação</h2><p>Escolha a data confirmada para o próximo encontro.</p><label for="chosenMeetingDate">Data do encontro</label><input id="chosenMeetingDate" type="date"><button id="closePollButton" class="secondary-button" type="button">Encerrar e divulgar data</button><p id="closePollMessage" class="admin-message" aria-live="polite"></p></div>
       <div class="new-poll-form"><span class="eyebrow">NOVA VOTAÇÃO</span><h2>Escolha o mês do encontro</h2><label for="adminPollMonth">Mês</label><input id="adminPollMonth" type="month" min="2026-08"><button id="activatePollButton" class="primary-button" type="button">Criar e ativar votação</button><p id="adminMessage" class="admin-message" aria-live="polite"></p></div>
       <aside class="admin-note"><strong>Como funciona</strong><p>As respostas dos meses anteriores ficam guardadas. Ao ativar um novo mês, o grupo passa a ver uma votação nova e sem respostas.</p></aside>
     </section>
   </main>
   <script src="js/firebase-config.js"></script>
-  <script type="module" src="js/admin.js?v=admin-profile-7"></script>
+  <script type="module" src="js/admin.js?v=poll-closing-8"></script>
 </body>
 </html>

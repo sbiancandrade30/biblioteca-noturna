@@ -52,6 +52,53 @@
   font-size: 11px;
 }
 
+.admin-account .text-button {
+  min-height: auto;
+  border: 1px solid #c8d9e9;
+  border-radius: 999px;
+  padding: 6px 11px;
+  background: #f7fafc;
+  font-size: 12px;
+}
+
+.close-poll {
+  border-top: 1px solid var(--line);
+  padding: 20px 0;
+}
+
+.close-poll h2 {
+  margin-bottom: 8px;
+}
+
+.close-poll p {
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+
+.close-poll input {
+  display: block;
+  width: 100%;
+  margin: 0 0 12px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font: inherit;
+}
+
+.secondary-button {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--blue);
+  border-radius: 9px;
+  background: #f7fafc;
+  color: var(--blue);
+  font: 700 14px "DM Sans", sans-serif;
+}
+
+.secondary-button:disabled {
+  opacity: .7;
+}
+
 @media (max-width: 519px) {
   .panel-heading {
     flex-direction: column;
