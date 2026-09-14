@@ -16,7 +16,7 @@
       ],
       "cleanUrls": true,
       "rewrites": [
-        { "source": "/votacao", "destination": "/index.html" }
+        { "source": "/votacao", "destination": "/votacao.html" }
       ],
       "headers": [
         {
@@ -40,7 +40,7 @@
       ],
       "cleanUrls": true,
       "rewrites": [
-        { "source": "/votacao", "destination": "/index.html" }
+        { "source": "/votacao", "destination": "/votacao.html" }
       ],
       "headers": [
         {
