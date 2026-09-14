@@ -8,7 +8,7 @@ const calendar = qs("#calendar");
 const formatter = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric" });
 const dayFormat = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long" });
 
-let remoteResponses = {}, db = null, firebaseReady = false, isSaving = false, unsubscribeResponses = null;
+let remoteResponses = {}, db = null, auth = null, firebaseProjectId = "", firebaseReady = false, isSaving = false, unsubscribeResponses = null;
 let selectedName = "", draft = [], pollKey = "2026-09", month = new Date(2026, 8, 1), pollClosed = false, chosenMeetingDate = "";
 
 function key(date) { return date.toISOString().slice(0, 10); }
@@ -85,14 +85,29 @@ function subscribeToResponses() {
     : isPastPoll() ? "Esta votação está encerrada e disponível para consulta." : "";
   updateActivePoll();
   const responsesCollection = collection(db, "polls", activeResponsePath, "responses");
-  const applyResponses = snapshot => {
+  const applyResponseValues = values => {
     if (activeResponsePath !== pollId()) return;
-    remoteResponses = Object.fromEntries(snapshot.docs.map(item => [item.data().name, item.data().dates || []]).filter(([name]) => participants.includes(name)));
+    remoteResponses = { ...remoteResponses, ...Object.fromEntries(Object.entries(values).filter(([name]) => participants.includes(name))) };
     if (selectedName && remoteResponses[selectedName] && !isSaving) draft = [...remoteResponses[selectedName]];
     refresh();
   };
+  const applyResponses = snapshot => applyResponseValues(Object.fromEntries(snapshot.docs.map(item => [item.data().name, item.data().dates || []])));
+  const loadResponsesDirectly = async () => {
+    try {
+      const token = await auth.currentUser.getIdToken();
+      const response = await fetch(`https://firestore.googleapis.com/v1/projects/${firebaseProjectId}/databases/(default)/documents/polls/${activeResponsePath}/responses`, { headers: { Authorization: `Bearer ${token}` } });
+      if (!response.ok) throw new Error(`Resposta ${response.status}`);
+      const payload = await response.json();
+      const values = Object.fromEntries((payload.documents || []).map(item => {
+        const fields = item.fields || {};
+        return [fields.name?.stringValue, (fields.dates?.arrayValue?.values || []).map(date => date.stringValue)];
+      }).filter(([name]) => name));
+      applyResponseValues(values);
+    } catch (error) { console.error(error); }
+  };
   getDocs(responsesCollection).then(applyResponses).catch(error => { console.error(error); qs("#saveMessage").textContent = "Não foi possível carregar as respostas da votação."; });
   unsubscribeResponses = onSnapshot(responsesCollection, applyResponses, error => { console.error(error); qs("#saveMessage").textContent = "A votação online não pôde ser atualizada."; });
+  loadResponsesDirectly();
   refresh();
 }
 qs("#participantName").addEventListener("change", syncName);
@@ -144,7 +159,7 @@ async function initializeFirebase() {
   const config = window.BIBLIOTECA_FIREBASE_CONFIG;
   if (!config) { qs("#saveMessage").textContent = "A configuração da votação online não foi encontrada."; return; }
   try {
-    const app = initializeApp(config); db = getFirestore(app); await ensureSignedIn(getAuth(app)); firebaseReady = true;
+    const app = initializeApp(config); db = getFirestore(app); auth = getAuth(app); firebaseProjectId = config.projectId; await ensureSignedIn(auth); firebaseReady = true;
     onSnapshot(doc(db, "settings", "active-poll"), snapshot => {
       const poll = snapshot.data() || {};
       const nextPoll = poll.key;
