@@ -27,7 +27,7 @@
         <div class="section-heading"><div><span class="eyebrow desktop-only">SUA RESPOSTA</span><h2>Quando você pode?</h2></div><span class="moon-mark" aria-hidden="true">☾</span></div>
         <div class="participant-picker"><label class="desktop-only" for="participantName">Quem está respondendo?</label><select id="participantName" aria-label="Selecione seu nome"><option value="">Selecione seu nome</option><option>Ana Cristina</option><option>Bianca</option><option>Larissa</option><option>Luana</option><option>Maria Eduarda</option><option>Pricila</option><option>Rhullya</option><option>Tainara</option></select><p id="replaceNotice" class="field-note" hidden></p></div>
         <div class="calendar-toolbar"><button class="icon-button" id="previousMonth" aria-label="Mês anterior">‹</button><strong id="monthTitle"></strong><button class="icon-button" id="nextMonth" aria-label="Próximo mês">›</button></div>
-        <div class="weekday-row" aria-hidden="true"><span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span></div><div id="calendar" class="calendar" aria-label="Calendário"></div><p class="field-note">Toque em todos os dias em que você consegue participar.</p>
+        <div class="weekday-row" aria-hidden="true"><span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span></div><div id="calendar" class="calendar" aria-label="Calendário"></div><p class="field-note">Escolha até 3 datas em que você consegue participar. Para alterar, toque novamente em uma data marcada.</p>
         <section id="summary" class="summary" hidden></section><button id="saveButton" class="primary-button" disabled>Salvar minha disponibilidade</button><p id="saveMessage" class="save-message" aria-live="polite"></p>
       </div>
       <aside class="results-column"><section class="card best-option" id="bestOption"></section><section class="card responses" id="responses"></section><section class="card group-results" id="groupResults"></section></aside>
@@ -35,6 +35,6 @@
   </main>
   <dialog id="detailsDialog" class="details-dialog"><div id="detailsContent"></div><button id="closeDialog" class="text-button">Fechar</button></dialog>
   <script src="js/firebase-config.js"></script>
-  <script type="module" src="js/poll.js?v=responses-direct-10"></script>
+  <script type="module" src="js/poll.js?v=responses-limit-11"></script>
 </body>
 </html>

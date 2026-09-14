@@ -27,8 +27,9 @@ service cloud.firestore {
           'Maria Eduarda', 'Pricila', 'Rhullya', 'Tainara'
         ]
         && responseId == request.resource.data.name
-        && request.resource.data.dates is list;
-      allow delete: if false;
+        && request.resource.data.dates is list
+        && request.resource.data.dates.size() <= 3;
+      allow delete: if isAdmin();
     }
   }
 }

@@ -1,17 +1,31 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-import { getFirestore, doc, onSnapshot, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { getFirestore, collection, deleteDoc, doc, onSnapshot, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const ADMIN_EMAILS = ["sbiancandrade@gmail.com"];
 const qs = selector => document.querySelector(selector);
 const formatter = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric" });
-let auth, db, unsubscribe = null;
+let auth, db, unsubscribe = null, unsubscribeResponses = null;
 let loginInProgress = false;
 let activePollKey = "", activePollClosed = false;
 
 function prettyMonth(value) { const [year, monthNumber] = value.split("-").map(Number); return formatter.format(new Date(year, monthNumber - 1, 1)).replace(/^(.)/, (_, character) => character.toUpperCase()); }
 function prettyDate(value) { return new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long" }).format(new Date(`${value}T12:00:00`)).replace(/^(.)/, (_, character) => character.toUpperCase()); }
 function setMessage(message, error = false) { const output = qs("#adminMessage"); output.textContent = message; output.style.color = error ? "#a13e32" : "#226149"; }
+function setResponsesMessage(message, error = false) { const output = qs("#responsesAdminMessage"); output.textContent = message; output.style.color = error ? "#a13e32" : "#226149"; }
+function renderResponseList(snapshot) {
+  const responses = snapshot.docs.map(item => ({ name: item.data().name || item.id, dates: item.data().dates || [] })).sort((first, second) => first.name.localeCompare(second.name, "pt-BR"));
+  qs("#adminResponsesList").innerHTML = responses.length
+    ? responses.map(response => `<article class="admin-response-row"><div><strong>${response.name}</strong><span>${response.dates.length ? response.dates.map(prettyDate).join(" · ") : "Nenhuma data marcada"}</span></div><button type="button" class="remove-response-button" data-response-name="${response.name}">Apagar resposta</button></article>`).join("")
+    : "<p class='field-note'>Ainda não há respostas nesta votação.</p>";
+}
+function subscribeToPollResponses() {
+  if (unsubscribeResponses) unsubscribeResponses();
+  qs("#adminResponsesList").innerHTML = "<p class='field-note'>Carregando respostas...</p>";
+  unsubscribeResponses = onSnapshot(collection(db, "polls", `encontro-${activePollKey}`, "responses"), renderResponseList, () => {
+    qs("#adminResponsesList").innerHTML = "<p class='field-note'>Não foi possível carregar as respostas.</p>";
+  });
+}
 function showAdmin(user) {
   const googleProfile = user?.providerData?.find(profile => profile.providerId === "google.com");
   const googleUser = Boolean(googleProfile);
@@ -66,6 +80,7 @@ function subscribeToActivePoll() {
     qs("#adminStatus").textContent = activePollClosed && chosenDate
       ? `A votação foi encerrada. Encontro confirmado para ${prettyDate(chosenDate)}.`
       : `A votação de ${prettyMonth(key)} está disponível para o grupo.`;
+    subscribeToPollResponses();
   }, () => { qs("#adminStatus").textContent = "Não foi possível carregar a votação ativa."; });
 }
 async function openGoogleLogin() {
@@ -100,6 +115,22 @@ qs("#logoutButton").onclick = async () => { await signOut(auth); };
 qs("#switchAccountButton").onclick = async () => {
   await signOut(auth);
   await openGoogleLogin();
+};
+qs("#adminResponsesList").onclick = async event => {
+  const button = event.target.closest("[data-response-name]");
+  if (!button) return;
+  const name = button.dataset.responseName;
+  if (!window.confirm(`Apagar a resposta de ${name}? Ela poderá preencher uma nova resposta depois.`)) return;
+  button.disabled = true;
+  setResponsesMessage("");
+  try {
+    await deleteDoc(doc(db, "polls", `encontro-${activePollKey}`, "responses", name));
+    setResponsesMessage(`A resposta de ${name} foi apagada.`);
+  } catch (error) {
+    console.error(error);
+    setResponsesMessage("Não foi possível apagar esta resposta.", true);
+    button.disabled = false;
+  }
 };
 qs("#activatePollButton").onclick = async () => {
   const key = qs("#adminPollMonth").value;

@@ -69,6 +69,73 @@
   background: #f8fafc;
 }
 
+.manage-responses {
+  margin: 18px 0;
+  padding: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.manage-responses h2 {
+  margin-bottom: 8px;
+}
+
+.manage-responses > p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 0 0 15px;
+}
+
+.admin-responses-list {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-response-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 11px 12px;
+  border: 1px solid #e1eaf2;
+  border-radius: 9px;
+  background: #f8fafc;
+}
+
+.admin-response-row strong,
+.admin-response-row span {
+  display: block;
+}
+
+.admin-response-row strong {
+  color: var(--blue);
+  font-size: 14px;
+}
+
+.admin-response-row span {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.remove-response-button {
+  flex: 0 0 auto;
+  border: 1px solid #cba9a3;
+  border-radius: 8px;
+  background: #fff;
+  color: #8b3d34;
+  padding: 7px 9px;
+  font: 600 12px "DM Sans", sans-serif;
+}
+
+.remove-response-button:hover:not(:disabled) {
+  background: #fff4f2;
+}
+
+.remove-response-button:disabled {
+  opacity: .65;
+}
+
 .close-poll h2 {
   margin-bottom: 8px;
 }
@@ -119,5 +186,10 @@
 
   .admin-account .text-button {
     margin-left: auto;
+  }
+
+  .admin-response-row {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

@@ -123,11 +123,16 @@ calendar.addEventListener("click", event => {
   const button = event.target.closest("[data-day]");
   if (!button || isPastPoll()) return;
   const dateKey = button.dataset.day;
+  if (!draft.includes(dateKey) && draft.length >= 3) {
+    qs("#saveMessage").textContent = "Você pode escolher no máximo 3 datas. Para trocar, toque em uma data já marcada.";
+    return;
+  }
   draft = draft.includes(dateKey) ? draft.filter(date => date !== dateKey) : [...draft, dateKey];
   refresh();
 });
 qs("#saveButton").onclick = async () => {
   if (!firebaseReady || !db) { qs("#saveMessage").textContent = "A votação online ainda não está conectada. Tente novamente em alguns segundos."; return; }
+  if (draft.length > 3) { qs("#saveMessage").textContent = "Cada participante pode escolher no máximo 3 datas."; return; }
   isSaving = true; qs("#saveButton").disabled = true;
   try {
     await setDoc(doc(db, "polls", pollId(), "responses", selectedName), { name: selectedName, dates: [...draft].sort(), updatedAt: serverTimestamp() });
