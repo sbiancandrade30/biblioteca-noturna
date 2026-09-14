@@ -13,11 +13,11 @@
   <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
-  <main class="admin-shell">
-    <header class="admin-brand"><img src="assets/brand-logo.png" alt="Biblioteca Noturna — Clube do Livro"><a href="./" class="public-link">Abrir página pública</a></header>
-    <section class="admin-intro"><span class="eyebrow">ÁREA ADMINISTRATIVA</span><h1>Organize as votações do clube.</h1><p>Crie a votação do próximo mês e escolha qual estará disponível para o grupo.</p></section>
-    <section id="loginCard" class="admin-card login-card"><h2>Acesso da administradora</h2><p>Entre com sua conta Google para gerenciar as votações.</p><button id="googleLoginButton" class="primary-button" type="button">Entrar com Google</button><p id="loginMessage" class="admin-message" aria-live="polite"></p></section>
-    <section id="adminPanel" class="admin-card" hidden>
+  <main class="app-shell admin-page">
+    <header class="brand-header"><img src="assets/brand-logo.png" alt="Biblioteca Noturna — Clube do Livro" class="brand-logo"><div class="stars" aria-hidden="true">✦ &nbsp;·&nbsp; ✧</div><a href="./" class="sidebar-public-link">Voltar à votação</a></header>
+    <section class="intro admin-intro"><a class="public-admin-link" href="./">Página pública</a><span class="eyebrow">ÁREA ADMINISTRATIVA</span><h1>Organize as votações do clube.</h1><p>Crie a votação do próximo mês e escolha qual estará disponível para o grupo.</p></section>
+    <section id="loginCard" class="card admin-card login-card"><span class="eyebrow">ACESSO PROTEGIDO</span><h2>Entrar como administradora</h2><p>Use a sua conta Google para criar e trocar as votações.</p><button id="googleLoginButton" class="primary-button" type="button">Entrar com Google</button><button id="switchAccountButton" class="text-button" type="button" hidden>Trocar de conta</button><p id="loginMessage" class="admin-message" aria-live="polite"></p></section>
+    <section id="adminPanel" class="card admin-card" hidden>
       <div class="panel-heading"><div><span class="eyebrow">VOTAÇÃO ATUAL</span><h2 id="currentPollTitle">Setembro de 2026</h2></div><button id="logoutButton" class="text-button" type="button">Sair</button></div>
       <div class="current-poll"><strong>Esta é a votação que as participantes veem agora.</strong><p id="adminStatus">Carregando votação ativa.</p></div>
       <div class="new-poll-form"><span class="eyebrow">NOVA VOTAÇÃO</span><h2>Escolha o mês do encontro</h2><label for="adminPollMonth">Mês</label><input id="adminPollMonth" type="month" min="2026-08"><button id="activatePollButton" class="primary-button" type="button">Criar e ativar votação</button><p id="adminMessage" class="admin-message" aria-live="polite"></p></div>

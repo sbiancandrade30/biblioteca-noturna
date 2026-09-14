@@ -13,7 +13,9 @@ function showAdmin(user) {
   const allowed = user?.email?.toLowerCase() === ADMIN_EMAIL;
   qs("#loginCard").hidden = allowed;
   qs("#adminPanel").hidden = !allowed;
-  if (!allowed && user) qs("#loginMessage").textContent = "Esta conta não tem acesso à administração.";
+  qs("#switchAccountButton").hidden = !user || allowed;
+  if (!allowed && user) qs("#loginMessage").textContent = `A conta ${user.email} não tem acesso à administração.`;
+  if (!user) qs("#loginMessage").textContent = "";
   if (allowed) subscribeToActivePoll();
 }
 function subscribeToActivePoll() {
@@ -31,6 +33,7 @@ qs("#googleLoginButton").onclick = async () => {
   catch (error) { console.error(error); qs("#loginMessage").textContent = "Não foi possível entrar. Confira se o login com Google está ativado no Firebase."; }
 };
 qs("#logoutButton").onclick = () => signOut(auth);
+qs("#switchAccountButton").onclick = () => signOut(auth);
 qs("#activatePollButton").onclick = async () => {
   const key = qs("#adminPollMonth").value;
   if (!key) { setMessage("Escolha um mês antes de continuar.", true); return; }
