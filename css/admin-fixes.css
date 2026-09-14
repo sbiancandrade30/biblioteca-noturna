@@ -1,3 +1,67 @@
 .account-identity[hidden] {
   display: none !important;
 }
+
+.admin-account {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.admin-avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: #eef4f8;
+  color: var(--blue);
+  font: 700 14px "DM Sans", sans-serif;
+}
+
+.admin-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin-avatar [hidden] {
+  display: none;
+}
+
+.admin-account-copy {
+  display: grid;
+  min-width: 0;
+  gap: 1px;
+  margin-right: 5px;
+}
+
+.admin-account-copy strong {
+  max-width: 130px;
+  overflow: hidden;
+  color: var(--blue);
+  font: 600 13px "DM Sans", sans-serif;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-account-copy span {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+@media (max-width: 519px) {
+  .panel-heading {
+    flex-direction: column;
+  }
+
+  .admin-account {
+    width: 100%;
+  }
+
+  .admin-account .text-button {
+    margin-left: auto;
+  }
+}

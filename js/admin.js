@@ -24,7 +24,22 @@ function showAdmin(user) {
     ? "Esta conta ainda não está autorizada para a administração."
     : "O Google não enviou o e-mail desta conta. Clique em Trocar de conta e escolha seu Gmail novamente.";
   if (!googleUser) qs("#loginMessage").textContent = "";
-  if (allowed) subscribeToActivePoll();
+  if (allowed) {
+    const name = String(user?.displayName || googleProfile?.displayName || email.split("@")[0] || "Administradora").trim();
+    const photoUrl = String(user?.photoURL || googleProfile?.photoURL || "").trim();
+    const avatar = qs("#adminAvatar");
+    const initial = qs("#adminInitial");
+    qs("#adminAccountName").textContent = name;
+    initial.textContent = name.charAt(0).toUpperCase();
+    avatar.hidden = !photoUrl;
+    initial.hidden = Boolean(photoUrl);
+    if (photoUrl) {
+      avatar.src = photoUrl;
+      avatar.alt = `Foto de ${name}`;
+      avatar.onerror = () => { avatar.hidden = true; initial.hidden = false; };
+    }
+    subscribeToActivePoll();
+  }
 }
 function subscribeToActivePoll() {
   if (unsubscribe) unsubscribe();
