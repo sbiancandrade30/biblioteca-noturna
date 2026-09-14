@@ -9,7 +9,8 @@ const formatter = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numer
 const dayFormat = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long" });
 
 let remoteResponses = {}, db = null, firebaseReady = false, isSaving = false, unsubscribe = null;
-let selectedName = "", draft = [], pollKey = "2026-09", month = new Date(2026, 8, 1);
+const requestedPoll = new URLSearchParams(window.location.search).get("votacao");
+let selectedName = "", draft = [], pollKey = /^\d{4}-(0[1-9]|1[0-2])$/.test(requestedPoll || "") ? requestedPoll : "2026-09", month = new Date(2026, 8, 1);
 
 function key(date) { return date.toISOString().slice(0, 10); }
 function pollId() { return `encontro-${pollKey}`; }
@@ -92,7 +93,14 @@ function subscribeToPoll() {
   }, error => { console.error(error); firebaseReady = false; qs("#saveMessage").textContent = "A votação online não pôde ser atualizada."; });
   updatePollSelect(); refresh();
 }
-function setPoll(nextPollKey) { pollKey = nextPollKey; updatePollSelect(); subscribeToPoll(); }
+function setPoll(nextPollKey) {
+  pollKey = nextPollKey;
+  const url = new URL(window.location.href);
+  url.searchParams.set("votacao", pollKey);
+  window.history.replaceState({}, "", url);
+  updatePollSelect();
+  subscribeToPoll();
+}
 
 qs("#participantName").addEventListener("change", syncName);
 qs("#pollSelect").addEventListener("change", event => setPoll(event.target.value));
