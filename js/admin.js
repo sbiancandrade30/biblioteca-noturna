@@ -10,8 +10,9 @@ let auth, db, unsubscribe = null;
 function prettyMonth(value) { const [year, monthNumber] = value.split("-").map(Number); return formatter.format(new Date(year, monthNumber - 1, 1)).replace(/^(.)/, (_, character) => character.toUpperCase()); }
 function setMessage(message, error = false) { const output = qs("#adminMessage"); output.textContent = message; output.style.color = error ? "#a13e32" : "#226149"; }
 function showAdmin(user) {
-  const googleUser = user && !user.isAnonymous;
-  const email = String(googleUser?.email || "").trim().toLowerCase();
+  const googleProfile = user?.providerData?.find(profile => profile.providerId === "google.com");
+  const googleUser = Boolean(googleProfile);
+  const email = String(user?.email || googleProfile?.email || "").trim().toLowerCase();
   const allowed = Boolean(googleUser) && ADMIN_EMAILS.includes(email);
   const identity = qs("#accountIdentity");
   qs("#loginCard").hidden = allowed;
@@ -19,7 +20,9 @@ function showAdmin(user) {
   qs("#switchAccountButton").hidden = !googleUser || allowed;
   identity.hidden = !googleUser || allowed;
   identity.textContent = googleUser ? `Conta conectada: ${email || "e-mail não informado"}` : "";
-  if (!allowed && googleUser) qs("#loginMessage").textContent = "Esta conta ainda não está autorizada para a administração.";
+  if (!allowed && googleUser) qs("#loginMessage").textContent = email
+    ? "Esta conta ainda não está autorizada para a administração."
+    : "O Google não enviou o e-mail desta conta. Clique em Trocar de conta e escolha seu Gmail novamente.";
   if (!googleUser) qs("#loginMessage").textContent = "";
   if (allowed) subscribeToActivePoll();
 }
