@@ -5,19 +5,21 @@ import { getFirestore, collection, deleteDoc, doc, onSnapshot, serverTimestamp, 
 const ADMIN_EMAILS = ["sbiancandrade@gmail.com"];
 const qs = selector => document.querySelector(selector);
 const formatter = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric" });
+const shortMonthNames = ["jan.", "fev.", "mar.", "abr.", "mai.", "jun.", "jul.", "ago.", "set.", "out.", "nov.", "dez."];
 let auth, db, unsubscribe = null, unsubscribeResponses = null, activeResponses = new Map();
 let loginInProgress = false;
 let activePollKey = "", activePollClosed = false;
 
 function prettyMonth(value) { const [year, monthNumber] = value.split("-").map(Number); return formatter.format(new Date(year, monthNumber - 1, 1)).replace(/^(.)/, (_, character) => character.toUpperCase()); }
 function prettyDate(value) { return new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long" }).format(new Date(`${value}T12:00:00`)).replace(/^(.)/, (_, character) => character.toUpperCase()); }
+function shortDate(value) { const [, month, day] = value.split("-").map(Number); return `${day} ${shortMonthNames[month - 1]}`; }
 function setMessage(message, error = false) { const output = qs("#adminMessage"); output.textContent = message; output.style.color = error ? "#a13e32" : "#226149"; }
 function setResponsesMessage(message, error = false) { const output = qs("#responsesAdminMessage"); output.textContent = message; output.style.color = error ? "#a13e32" : "#226149"; }
 function renderResponseList(snapshot) {
   const responses = snapshot.docs.map(item => ({ name: item.data().name || item.id, dates: item.data().dates || [] })).sort((first, second) => first.name.localeCompare(second.name, "pt-BR"));
   activeResponses = new Map(responses.map(response => [response.name, response.dates]));
   qs("#adminResponsesList").innerHTML = responses.length
-    ? responses.map(response => `<article class="admin-response-row"><strong>${response.name}</strong><div class="admin-response-dates">${response.dates.map(date => `<button type="button" class="remove-date-button" data-response-name="${response.name}" data-response-date="${date}" aria-label="Remover ${prettyDate(date)} de ${response.name}"><span>${prettyDate(date)}</span><b aria-hidden="true">×</b></button>`).join("")}</div></article>`).join("")
+    ? responses.map(response => `<article class="admin-response-row"><strong>${response.name}</strong><div class="admin-response-dates">${response.dates.map(date => `<button type="button" class="remove-date-button" data-response-name="${response.name}" data-response-date="${date}" aria-label="Remover ${prettyDate(date)} de ${response.name}" title="Remover ${prettyDate(date)}"><span>${shortDate(date)}</span><b aria-hidden="true">×</b></button>`).join("")}</div></article>`).join("")
     : "<p class='field-note'>Ainda não há respostas nesta votação.</p>";
 }
 function subscribeToPollResponses() {

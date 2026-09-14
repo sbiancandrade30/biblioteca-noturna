@@ -93,8 +93,10 @@
 
 .admin-response-row {
   display: grid;
+  grid-template-columns: minmax(72px, 92px) 1fr;
+  align-items: center;
   gap: 9px;
-  padding: 11px 12px;
+  padding: 8px 10px;
   border: 1px solid #e1eaf2;
   border-radius: 9px;
   background: #f8fafc;
@@ -109,7 +111,7 @@
 .admin-response-dates {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
 }
 
 .remove-date-button {
@@ -120,13 +122,13 @@
   border-radius: 8px;
   background: #fff;
   color: #8b3d34;
-  padding: 6px 8px;
-  font: 600 12px "DM Sans", sans-serif;
+  padding: 4px 6px;
+  font: 600 11px "DM Sans", sans-serif;
 }
 
 .remove-date-button b {
   color: #a4473d;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 500;
   line-height: .7;
 }
@@ -189,6 +191,11 @@
 
   .admin-account .text-button {
     margin-left: auto;
+  }
+
+  .admin-response-row {
+    grid-template-columns: 1fr;
+    align-items: start;
   }
 
 }
