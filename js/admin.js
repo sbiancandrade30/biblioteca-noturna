@@ -61,7 +61,7 @@ function subscribeToActivePoll() {
     qs("#chosenMeetingDate").disabled = activePollClosed;
     qs("#closePollButton").disabled = activePollClosed;
     qs("#closePollMessage").textContent = activePollClosed && chosenDate
-      ? `Encontro definido para ${prettyDate(chosenDate)}.`
+      ? `Encontro confirmado para ${prettyDate(chosenDate)}.`
       : "";
     qs("#adminStatus").textContent = activePollClosed && chosenDate
       ? `A votação foi encerrada. Encontro confirmado para ${prettyDate(chosenDate)}.`
@@ -114,7 +114,7 @@ qs("#activatePollButton").onclick = async () => {
 };
 qs("#closePollButton").onclick = async () => {
   const chosenDate = qs("#chosenMeetingDate").value;
-  if (!chosenDate) { qs("#closePollMessage").textContent = "Escolha a data do encontro antes de encerrar."; return; }
+  if (!chosenDate) { qs("#closePollMessage").textContent = "Escolha a data definida pelo grupo antes de confirmar."; return; }
   if (activePollClosed) return;
   qs("#closePollButton").disabled = true;
   try {

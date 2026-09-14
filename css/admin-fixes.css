@@ -62,8 +62,11 @@
 }
 
 .close-poll {
-  border-top: 1px solid var(--line);
-  padding: 20px 0;
+  margin: 18px 0;
+  padding: 18px;
+  border: 1px solid #dfe8f0;
+  border-radius: 12px;
+  background: #f8fafc;
 }
 
 .close-poll h2 {
@@ -72,7 +75,9 @@
 
 .close-poll p {
   color: var(--muted);
-  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 0 0 15px;
 }
 
 .close-poll input {
@@ -90,13 +95,17 @@
   min-height: 44px;
   border: 1px solid var(--blue);
   border-radius: 9px;
-  background: #f7fafc;
+  background: #fff;
   color: var(--blue);
   font: 700 14px "DM Sans", sans-serif;
 }
 
 .secondary-button:disabled {
   opacity: .7;
+}
+
+.secondary-button:not(:disabled):hover {
+  background: #edf4fa;
 }
 
 @media (max-width: 519px) {
