@@ -23,9 +23,9 @@
     <section class="workspace" aria-label="Organização do encontro">
       <div class="planner card">
         <div class="poll-switcher">
-          <div><span class="eyebrow">VOTAÇÃO ATIVA</span><label for="pollSelect">Escolha o mês</label></div>
-          <select id="pollSelect" aria-label="Escolha a votação"><option value="2026-09">Setembro de 2026</option><option value="2026-08">Agosto de 2026</option></select>
-          <button id="newPollButton" class="outline-button" type="button">Nova votação</button>
+          <div class="poll-switcher-copy"><span class="eyebrow">VOTAÇÃO ATIVA</span><strong id="activePollTitle">Setembro de 2026</strong></div>
+          <div class="poll-picker"><label for="pollSelect">Escolha um mês</label><select id="pollSelect" aria-label="Escolha a votação"><option value="2026-08">Agosto de 2026</option><option value="2026-09">Setembro de 2026</option><option value="2026-10">Outubro de 2026</option><option value="2026-11">Novembro de 2026</option><option value="2026-12">Dezembro de 2026</option><option value="2027-01">Janeiro de 2027</option><option value="2027-02">Fevereiro de 2027</option><option value="2027-03">Março de 2027</option><option value="2027-04">Abril de 2027</option><option value="2027-05">Maio de 2027</option><option value="2027-06">Junho de 2027</option><option value="2027-07">Julho de 2027</option><option value="2027-08">Agosto de 2027</option><option value="2027-09">Setembro de 2027</option><option value="2027-10">Outubro de 2027</option><option value="2027-11">Novembro de 2027</option><option value="2027-12">Dezembro de 2027</option></select></div>
+          <button id="newPollButton" class="outline-button" type="button">Outro mês</button>
         </div>
         <div class="section-heading"><div><span class="eyebrow desktop-only">SUA RESPOSTA</span><h2>Quando você pode?</h2></div><span class="moon-mark" aria-hidden="true">☾</span></div>
         <div class="participant-picker"><label class="desktop-only" for="participantName">Quem está respondendo?</label><select id="participantName" aria-label="Selecione seu nome"><option value="">Selecione seu nome</option><option>Ana Cristina</option><option>Bianca</option><option>Larissa</option><option>Luana</option><option>Maria Eduarda</option><option>Pricila</option><option>Rhullya</option><option>Tainara</option></select><p id="replaceNotice" class="field-note" hidden></p></div>

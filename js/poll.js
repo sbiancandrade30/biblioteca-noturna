@@ -25,8 +25,9 @@ function updatePollSelect() {
   const select = qs("#pollSelect");
   if (![...select.options].some(option => option.value === pollKey)) select.add(new Option(formatPollKey(pollKey), pollKey));
   [...select.options].forEach(option => { option.textContent = formatPollKey(option.value); });
-  [...select.options].sort((a, b) => b.value.localeCompare(a.value)).forEach(option => select.append(option));
+  [...select.options].sort((a, b) => a.value.localeCompare(b.value)).forEach(option => select.append(option));
   select.value = pollKey;
+  qs("#activePollTitle").textContent = formatPollKey(pollKey);
 }
 
 function renderCalendar() {
