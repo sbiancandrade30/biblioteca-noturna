@@ -22,8 +22,10 @@ function isPastPoll() { const today = new Date(); return pollClosed || pollDate(
 
 function updateActivePoll() {
   const activeMonth = prettyMonth(pollKey);
-  qs("#activePollLabel").textContent = `VOTAÇÃO DE ${activeMonth.toUpperCase()}`;
-  qs("#publicPollTitle").textContent = activeMonth;
+  const activePollLabel = qs("#activePollLabel");
+  const publicPollTitle = qs("#publicPollTitle");
+  if (activePollLabel) activePollLabel.textContent = `VOTAÇÃO DE ${activeMonth.toUpperCase()}`;
+  if (publicPollTitle) publicPollTitle.textContent = activeMonth;
   qs("#publicPollNotice").innerHTML = pollClosed && chosenMeetingDate
     ? `<span>Próximo encontro confirmado para</span> <strong>${prettyDate(chosenMeetingDate)}</strong>`
     : `<span>Votação aberta para o encontro de</span> <strong>${activeMonth}</strong>`;
