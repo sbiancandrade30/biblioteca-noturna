@@ -15,6 +15,9 @@
         "**/node_modules/**"
       ],
       "cleanUrls": true,
+      "rewrites": [
+        { "source": "/votacao", "destination": "/index.html" }
+      ],
       "headers": [
         {
           "source": "**",
@@ -36,6 +39,9 @@
         "**/node_modules/**"
       ],
       "cleanUrls": true,
+      "rewrites": [
+        { "source": "/votacao", "destination": "/index.html" }
+      ],
       "headers": [
         {
           "source": "**",
