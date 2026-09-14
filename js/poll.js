@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getFirestore, collection, doc, onSnapshot, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const participants = ["Ana Cristina", "Bianca", "Larissa", "Luana", "Maria Eduarda", "Pricila", "Rhullya", "Tainara"];
@@ -123,11 +123,23 @@ document.addEventListener("click", event => {
   document.querySelectorAll(".avatar.show-tooltip").forEach(item => { if (item !== avatar) item.classList.remove("show-tooltip"); });
   if (avatar && touchDevice) { event.preventDefault(); avatar.classList.toggle("show-tooltip"); }
 });
+function ensureSignedIn(auth) {
+  return new Promise((resolve, reject) => {
+    let unsubscribe = () => {};
+    unsubscribe = onAuthStateChanged(auth, async user => {
+      unsubscribe();
+      try {
+        if (!user) await signInAnonymously(auth);
+        resolve();
+      } catch (error) { reject(error); }
+    }, reject);
+  });
+}
 async function initializeFirebase() {
   const config = window.BIBLIOTECA_FIREBASE_CONFIG;
   if (!config) { qs("#saveMessage").textContent = "A configuração da votação online não foi encontrada."; return; }
   try {
-    const app = initializeApp(config); db = getFirestore(app); await signInAnonymously(getAuth(app)); firebaseReady = true;
+    const app = initializeApp(config); db = getFirestore(app); await ensureSignedIn(getAuth(app)); firebaseReady = true;
     onSnapshot(doc(db, "settings", "active-poll"), snapshot => {
       const poll = snapshot.data() || {};
       const nextPoll = poll.key;
