@@ -7,6 +7,9 @@
       "hosting": {
         "biblioteca-noturna": [
           "biblioteca-noturna"
+        ],
+        "site-principal": [
+          "clube-do-livro-bn"
         ]
       }
     }

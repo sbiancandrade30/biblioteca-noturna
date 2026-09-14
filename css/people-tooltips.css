@@ -12,6 +12,7 @@
 @media (min-width:1200px){.workspace{grid-template-columns:minmax(450px,1.34fr) minmax(374px,1fr)}}
 
 /* Controle de votações mensais. */
+.poll-notice{display:flex;flex-wrap:wrap;gap:4px;align-items:baseline;margin:0 0 18px;padding:10px 12px;border-radius:8px;background:#f8fafc;border:1px solid #e3ebf3;color:var(--muted);font-size:13px}.poll-notice strong{color:var(--blue);font-weight:700}
 .poll-switcher{display:grid;gap:13px;padding:0 0 19px;margin-bottom:20px;border-bottom:1px solid var(--line)}
 .poll-switcher-copy{display:grid;gap:2px}.poll-switcher .eyebrow{margin:0}.poll-switcher-copy strong{font:600 22px "Cormorant Garamond",serif;line-height:1.05;color:var(--ink)}
 .poll-picker label{margin:0 0 6px;font-size:13px}.poll-switcher select{padding:11px 13px}

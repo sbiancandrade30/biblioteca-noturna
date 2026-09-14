@@ -21,7 +21,9 @@ function allResponses() { return { ...remoteResponses, ...(selectedName && draft
 function isPastPoll() { const today = new Date(); return pollDate() < new Date(today.getFullYear(), today.getMonth(), 1); }
 
 function updateActivePoll() {
-  qs("#activePollLabel").textContent = `VOTAÇÃO DE ${prettyMonth(pollKey).toUpperCase()}`;
+  const activeMonth = prettyMonth(pollKey);
+  qs("#activePollLabel").textContent = `VOTAÇÃO DE ${activeMonth.toUpperCase()}`;
+  qs("#publicPollTitle").textContent = activeMonth;
   month = pollDate();
 }
 function renderCalendar() {
