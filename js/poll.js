@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-import { getFirestore, collection, doc, onSnapshot, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+import { getFirestore, collection, doc, getDocs, onSnapshot, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const participants = ["Ana Cristina", "Bianca", "Larissa", "Luana", "Maria Eduarda", "Pricila", "Rhullya", "Tainara"];
 const qs = selector => document.querySelector(selector);
@@ -77,17 +77,22 @@ function syncName() {
 }
 function subscribeToResponses() {
   if (unsubscribeResponses) unsubscribeResponses();
+  const activeResponsePath = pollId();
   remoteResponses = {}; selectedName = ""; draft = [];
   qs("#participantName").value = "";
   qs("#saveMessage").textContent = pollClosed && chosenMeetingDate
     ? `Votação encerrada. Encontro confirmado para ${prettyDate(chosenMeetingDate)}.`
     : isPastPoll() ? "Esta votação está encerrada e disponível para consulta." : "";
   updateActivePoll();
-  unsubscribeResponses = onSnapshot(collection(db, "polls", pollId(), "responses"), snapshot => {
+  const responsesCollection = collection(db, "polls", activeResponsePath, "responses");
+  const applyResponses = snapshot => {
+    if (activeResponsePath !== pollId()) return;
     remoteResponses = Object.fromEntries(snapshot.docs.map(item => [item.data().name, item.data().dates || []]).filter(([name]) => participants.includes(name)));
     if (selectedName && remoteResponses[selectedName] && !isSaving) draft = [...remoteResponses[selectedName]];
     refresh();
-  }, error => { console.error(error); qs("#saveMessage").textContent = "A votação online não pôde ser atualizada."; });
+  };
+  getDocs(responsesCollection).then(applyResponses).catch(error => { console.error(error); qs("#saveMessage").textContent = "Não foi possível carregar as respostas da votação."; });
+  unsubscribeResponses = onSnapshot(responsesCollection, applyResponses, error => { console.error(error); qs("#saveMessage").textContent = "A votação online não pôde ser atualizada."; });
   refresh();
 }
 qs("#participantName").addEventListener("change", syncName);
