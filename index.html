@@ -19,9 +19,14 @@
 <body>
   <main class="app-shell">
     <header class="brand-header"><img src="assets/brand-logo.png" alt="Biblioteca Noturna — Clube do Livro" class="brand-logo"><div class="stars" aria-hidden="true">✦ &nbsp;·&nbsp; ✧</div></header>
-    <section class="intro"><span class="eyebrow desktop-only">PRÓXIMO ENCONTRO</span><h1>Vamos marcar nosso próximo encontro?</h1><p>Marque os dias que você pode. Assim encontramos a melhor data para todas.</p></section>
+    <section class="intro"><span class="eyebrow desktop-only">VOTAÇÃO DO ENCONTRO</span><h1>Vamos marcar nosso próximo encontro?</h1><p>Marque os dias que você pode. Assim encontramos a melhor data para todas.</p></section>
     <section class="workspace" aria-label="Organização do encontro">
       <div class="planner card">
+        <div class="poll-switcher">
+          <div><span class="eyebrow">VOTAÇÃO ATIVA</span><label for="pollSelect">Escolha o mês</label></div>
+          <select id="pollSelect" aria-label="Escolha a votação"><option value="2026-09">Setembro de 2026</option><option value="2026-08">Agosto de 2026</option></select>
+          <button id="newPollButton" class="outline-button" type="button">Nova votação</button>
+        </div>
         <div class="section-heading"><div><span class="eyebrow desktop-only">SUA RESPOSTA</span><h2>Quando você pode?</h2></div><span class="moon-mark" aria-hidden="true">☾</span></div>
         <div class="participant-picker"><label class="desktop-only" for="participantName">Quem está respondendo?</label><select id="participantName" aria-label="Selecione seu nome"><option value="">Selecione seu nome</option><option>Ana Cristina</option><option>Bianca</option><option>Larissa</option><option>Luana</option><option>Maria Eduarda</option><option>Pricila</option><option>Rhullya</option><option>Tainara</option></select><p id="replaceNotice" class="field-note" hidden></p></div>
         <div class="calendar-toolbar"><button class="icon-button" id="previousMonth" aria-label="Mês anterior">‹</button><strong id="monthTitle"></strong><button class="icon-button" id="nextMonth" aria-label="Próximo mês">›</button></div>
@@ -32,6 +37,7 @@
     </section>
   </main>
   <dialog id="detailsDialog" class="details-dialog"><div id="detailsContent"></div><button id="closeDialog" class="text-button">Fechar</button></dialog>
+  <dialog id="newPollDialog" class="details-dialog new-poll-dialog"><button id="closeNewPollDialog" class="dialog-close" type="button" aria-label="Fechar">×</button><span class="eyebrow">NOVA VOTAÇÃO</span><h2>Escolha o mês</h2><p>As respostas da votação atual continuarão guardadas. A nova votação começará sem respostas.</p><label for="newPollMonth">Mês do encontro</label><input id="newPollMonth" type="month" min="2026-08"><button id="createPollButton" class="primary-button" type="button">Criar votação</button></dialog>
   <script src="js/firebase-config.js"></script>
   <script type="module" src="js/poll.js"></script>
 </body>

@@ -10,3 +10,10 @@
 @media (max-width:519px){.responses{padding:16px!important}.responses .avatar-list{justify-content:space-between;gap:3px}.responses .avatar{width:34px!important;height:34px!important;min-width:34px;min-height:34px;flex:0 0 34px!important;font-size:11px}.responses .pending{margin-top:17px}}
 @media (min-width:520px){.responses .avatar-list{justify-content:center;gap:7px}}
 @media (min-width:1200px){.workspace{grid-template-columns:minmax(450px,1.34fr) minmax(374px,1fr)}}
+
+/* Controle de votações mensais. */
+.poll-switcher{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;padding:0 0 19px;margin-bottom:20px;border-bottom:1px solid var(--line)}
+.poll-switcher .eyebrow{margin-bottom:3px}.poll-switcher label{margin:0;font-size:14px}.poll-switcher select{grid-column:1/-1;padding:11px 13px}
+.outline-button{border:1px solid var(--blue);border-radius:8px;background:#fff;color:var(--blue);font:700 13px "DM Sans",sans-serif;padding:10px 12px;white-space:nowrap}
+.new-poll-dialog{position:relative}.new-poll-dialog p{color:var(--muted);margin:0 0 18px}.new-poll-dialog input{width:100%;border:1px solid var(--line);border-radius:8px;padding:12px;font:inherit;margin:0 0 16px}.dialog-close{position:absolute;right:14px;top:10px;border:0;background:transparent;color:var(--blue);font-size:29px;line-height:1}
+@media(min-width:520px){.poll-switcher{grid-template-columns:1fr minmax(190px,260px) auto}.poll-switcher select{grid-column:auto}.outline-button{align-self:center;margin-top:20px}}
