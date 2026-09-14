@@ -10,13 +10,14 @@ let auth, db, unsubscribe = null;
 function prettyMonth(value) { const [year, monthNumber] = value.split("-").map(Number); return formatter.format(new Date(year, monthNumber - 1, 1)).replace(/^(.)/, (_, character) => character.toUpperCase()); }
 function setMessage(message, error = false) { const output = qs("#adminMessage"); output.textContent = message; output.style.color = error ? "#a13e32" : "#226149"; }
 function showAdmin(user) {
-  const email = String(user?.email || "").trim().toLowerCase();
-  const allowed = ADMIN_EMAILS.includes(email);
+  const googleUser = user && !user.isAnonymous;
+  const email = String(googleUser?.email || "").trim().toLowerCase();
+  const allowed = Boolean(googleUser) && ADMIN_EMAILS.includes(email);
   qs("#loginCard").hidden = allowed;
   qs("#adminPanel").hidden = !allowed;
-  qs("#switchAccountButton").hidden = !user || allowed;
-  if (!allowed && user) qs("#loginMessage").textContent = `A conta ${email} não tem acesso à administração.`;
-  if (!user) qs("#loginMessage").textContent = "";
+  qs("#switchAccountButton").hidden = !googleUser || allowed;
+  if (!allowed && googleUser) qs("#loginMessage").textContent = `A conta ${email} não tem acesso à administração.`;
+  if (!googleUser) qs("#loginMessage").textContent = "";
   if (allowed) subscribeToActivePoll();
 }
 function subscribeToActivePoll() {
