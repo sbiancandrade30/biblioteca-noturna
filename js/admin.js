@@ -13,10 +13,13 @@ function showAdmin(user) {
   const googleUser = user && !user.isAnonymous;
   const email = String(googleUser?.email || "").trim().toLowerCase();
   const allowed = Boolean(googleUser) && ADMIN_EMAILS.includes(email);
+  const identity = qs("#accountIdentity");
   qs("#loginCard").hidden = allowed;
   qs("#adminPanel").hidden = !allowed;
   qs("#switchAccountButton").hidden = !googleUser || allowed;
-  if (!allowed && googleUser) qs("#loginMessage").textContent = `A conta ${email} não tem acesso à administração.`;
+  identity.hidden = !googleUser || allowed;
+  identity.textContent = googleUser ? `Conta conectada: ${email || "e-mail não informado"}` : "";
+  if (!allowed && googleUser) qs("#loginMessage").textContent = "Esta conta ainda não está autorizada para a administração.";
   if (!googleUser) qs("#loginMessage").textContent = "";
   if (allowed) subscribeToActivePoll();
 }
