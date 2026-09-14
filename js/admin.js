@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, getRedirectResult, onAuthStateChanged, signInWithRedirect, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getFirestore, doc, onSnapshot, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const ADMIN_EMAILS = ["sbiancandrade@gmail.com"];
@@ -32,13 +32,26 @@ function subscribeToActivePoll() {
     qs("#adminStatus").textContent = `A votação de ${prettyMonth(key)} está disponível para o grupo.`;
   }, () => { qs("#adminStatus").textContent = "Não foi possível carregar a votação ativa."; });
 }
-qs("#googleLoginButton").onclick = async () => {
-  qs("#loginMessage").textContent = "Abrindo o login do Google.";
-  try { await signInWithRedirect(auth, new GoogleAuthProvider()); }
-  catch (error) { console.error(error); qs("#loginMessage").textContent = "Não foi possível abrir o login. Confira se o Google está ativado no Firebase."; }
+async function openGoogleLogin() {
+  const message = qs("#loginMessage");
+  message.textContent = "Abrindo a escolha de conta Google.";
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({ prompt: "select_account" });
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (error) {
+    console.error(error);
+    message.textContent = error.code === "auth/popup-blocked"
+      ? "O navegador bloqueou a janela de login. Permita pop-ups para este site e tente novamente."
+      : "Não foi possível entrar com o Google. Tente novamente.";
+  }
+}
+qs("#googleLoginButton").onclick = openGoogleLogin;
+qs("#logoutButton").onclick = async () => { await signOut(auth); };
+qs("#switchAccountButton").onclick = async () => {
+  await signOut(auth);
+  await openGoogleLogin();
 };
-qs("#logoutButton").onclick = () => signOut(auth);
-qs("#switchAccountButton").onclick = () => signOut(auth);
 qs("#activatePollButton").onclick = async () => {
   const key = qs("#adminPollMonth").value;
   if (!key) { setMessage("Escolha um mês antes de continuar.", true); return; }
@@ -54,9 +67,5 @@ if (!config) qs("#loginMessage").textContent = "A configuração do Firebase nã
 else {
   const app = initializeApp(config);
   auth = getAuth(app); db = getFirestore(app);
-  getRedirectResult(auth).catch(error => {
-    console.error(error);
-    qs("#loginMessage").textContent = "O login não foi concluído. Tente novamente.";
-  });
   onAuthStateChanged(auth, showAdmin);
 }
