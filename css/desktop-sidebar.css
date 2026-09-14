@@ -1,0 +1,9 @@
+@media (min-width: 820px) {
+  .brand-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100dvh;
+    min-height: 0;
+  }
+}
