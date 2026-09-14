@@ -13,11 +13,11 @@
 
 /* Controle de votações mensais. */
 .poll-notice{display:flex;flex-wrap:wrap;gap:4px;align-items:baseline;margin:0 0 18px;padding:10px 12px;border-radius:8px;background:#f8fafc;border:1px solid #e3ebf3;color:var(--muted);font-size:13px}.poll-notice strong{color:var(--blue);font-weight:700}
-.intro{position:relative}.public-admin-link{position:absolute;right:3px;top:8px;display:inline-flex;align-items:center;gap:6px;border:1px solid #cbd9e6;border-radius:999px;background:#fff;color:var(--blue);font:700 12px "DM Sans",sans-serif;text-decoration:none;padding:8px 11px;box-shadow:0 4px 14px rgba(9,33,59,.06)}.public-admin-link span:first-child{color:var(--gold);font-size:15px;line-height:1}
+.sidebar-admin-link{position:absolute;left:18px;right:18px;bottom:24px;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid rgba(212,163,77,.72);border-radius:9px;color:#fff;background:rgba(18,58,98,.32);text-align:center;text-decoration:none;font:600 13px "DM Sans",sans-serif;padding:11px 8px;z-index:2;transition:background .2s}.sidebar-admin-link span:first-child{color:var(--gold);font-size:16px;line-height:1}.sidebar-admin-link:hover{background:rgba(212,163,77,.16)}
 .poll-switcher{display:grid;gap:13px;padding:0 0 19px;margin-bottom:20px;border-bottom:1px solid var(--line)}
 .poll-switcher-copy{display:grid;gap:2px}.poll-switcher .eyebrow{margin:0}.poll-switcher-copy strong{font:600 22px "Cormorant Garamond",serif;line-height:1.05;color:var(--ink)}
 .poll-picker label{margin:0 0 6px;font-size:13px}.poll-switcher select{padding:11px 13px}
 .outline-button{border:1px solid var(--blue);border-radius:8px;background:#fff;color:var(--blue);font:700 13px "DM Sans",sans-serif;padding:11px 12px;white-space:nowrap}
 .new-poll-dialog{position:relative}.new-poll-dialog p{color:var(--muted);margin:0 0 18px}.new-poll-dialog input{width:100%;border:1px solid var(--line);border-radius:8px;padding:12px;font:inherit;margin:0 0 16px}.dialog-close{position:absolute;right:14px;top:10px;border:0;background:transparent;color:var(--blue);font-size:29px;line-height:1}
 @media(min-width:700px){.poll-switcher{grid-template-columns:minmax(150px,1fr) minmax(220px,270px) auto;align-items:end;gap:14px}.outline-button{min-height:43px}}
-@media(max-width:519px){.public-admin-link{top:16px;right:4px;width:34px;height:34px;justify-content:center;padding:0}.public-admin-link .admin-link-label{display:none}.intro{padding-top:42px!important}}
+@media(max-width:519px){.sidebar-admin-link{top:14px;right:14px;bottom:auto;left:auto;width:34px;height:34px;padding:0}.sidebar-admin-link .admin-link-label{display:none}}
