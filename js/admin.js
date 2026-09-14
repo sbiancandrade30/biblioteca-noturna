@@ -6,6 +6,7 @@ const ADMIN_EMAILS = ["sbiancandrade@gmail.com"];
 const qs = selector => document.querySelector(selector);
 const formatter = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numeric" });
 let auth, db, unsubscribe = null;
+let loginInProgress = false;
 
 function prettyMonth(value) { const [year, monthNumber] = value.split("-").map(Number); return formatter.format(new Date(year, monthNumber - 1, 1)).replace(/^(.)/, (_, character) => character.toUpperCase()); }
 function setMessage(message, error = false) { const output = qs("#adminMessage"); output.textContent = message; output.style.color = error ? "#a13e32" : "#226149"; }
@@ -51,17 +52,30 @@ function subscribeToActivePoll() {
   }, () => { qs("#adminStatus").textContent = "Não foi possível carregar a votação ativa."; });
 }
 async function openGoogleLogin() {
+  if (loginInProgress) return;
+  loginInProgress = true;
   const message = qs("#loginMessage");
-  message.textContent = "Abrindo a escolha de conta Google.";
+  const loginButton = qs("#googleLoginButton");
+  loginButton.disabled = true;
+  loginButton.textContent = "Abrindo o Google...";
+  message.textContent = "Aguarde um instante.";
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: "select_account" });
   try {
     await signInWithPopup(auth, provider);
   } catch (error) {
     console.error(error);
-    message.textContent = error.code === "auth/popup-blocked"
-      ? "O navegador bloqueou a janela de login. Permita pop-ups para este site e tente novamente."
-      : "Não foi possível entrar com o Google. Tente novamente.";
+    const messages = {
+      "auth/popup-blocked": "O navegador bloqueou a janela de login. Permita pop-ups para este site e tente novamente.",
+      "auth/popup-closed-by-user": "A janela do Google foi fechada antes do fim. Tente novamente.",
+      "auth/cancelled-popup-request": "Já havia uma tentativa de login em andamento. Aguarde e tente novamente.",
+      "auth/unauthorized-domain": "Este endereço ainda não está autorizado no Firebase."
+    };
+    message.textContent = messages[error.code] || "Não foi possível entrar com o Google. Tente novamente.";
+  } finally {
+    loginInProgress = false;
+    loginButton.disabled = false;
+    loginButton.textContent = "Entrar com Google";
   }
 }
 qs("#googleLoginButton").onclick = openGoogleLogin;
