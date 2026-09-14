@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, getRedirectResult, onAuthStateChanged, signInWithRedirect, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getFirestore, doc, onSnapshot, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const ADMIN_EMAILS = ["sbiancandrade@gmail.com"];
@@ -31,8 +31,8 @@ function subscribeToActivePoll() {
 }
 qs("#googleLoginButton").onclick = async () => {
   qs("#loginMessage").textContent = "Abrindo o login do Google.";
-  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
-  catch (error) { console.error(error); qs("#loginMessage").textContent = "Não foi possível entrar. Confira se o login com Google está ativado no Firebase."; }
+  try { await signInWithRedirect(auth, new GoogleAuthProvider()); }
+  catch (error) { console.error(error); qs("#loginMessage").textContent = "Não foi possível abrir o login. Confira se o Google está ativado no Firebase."; }
 };
 qs("#logoutButton").onclick = () => signOut(auth);
 qs("#switchAccountButton").onclick = () => signOut(auth);
@@ -51,5 +51,9 @@ if (!config) qs("#loginMessage").textContent = "A configuração do Firebase nã
 else {
   const app = initializeApp(config);
   auth = getAuth(app); db = getFirestore(app);
+  getRedirectResult(auth).catch(error => {
+    console.error(error);
+    qs("#loginMessage").textContent = "O login não foi concluído. Tente novamente.";
+  });
   onAuthStateChanged(auth, showAdmin);
 }
