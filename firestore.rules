@@ -10,12 +10,22 @@ service cloud.firestore {
       return signedIn() && request.auth.token.email == 'sbiancandrade@gmail.com';
     }
 
+    function validMaximumDates(value) {
+      return value == null || (value is int && value >= 1 && value <= 31);
+    }
+
+    function respectsDateLimit() {
+      let maximum = get(/databases/$(database)/documents/settings/active-poll).data.get('maxDates', 3);
+      return maximum == null || request.resource.data.dates.size() <= maximum;
+    }
+
     match /settings/active-poll {
       allow read: if signedIn();
       allow create, update: if isAdmin()
         && request.resource.data.key is string
         && request.resource.data.status in ['open', 'closed']
-        && (request.resource.data.chosenDate == null || request.resource.data.chosenDate is string);
+        && (request.resource.data.chosenDate == null || request.resource.data.chosenDate is string)
+        && validMaximumDates(request.resource.data.get('maxDates', 3));
       allow delete: if false;
     }
 
@@ -28,7 +38,7 @@ service cloud.firestore {
         ]
         && responseId == request.resource.data.name
         && request.resource.data.dates is list
-        && request.resource.data.dates.size() <= 3;
+        && respectsDateLimit();
       allow delete: if isAdmin();
     }
   }

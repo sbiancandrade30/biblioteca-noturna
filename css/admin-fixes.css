@@ -75,6 +75,65 @@
   border-top: 1px solid var(--line);
 }
 
+.poll-settings {
+  margin: 18px 0;
+  padding: 18px;
+  border: 1px solid #dfe8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.poll-settings h2 {
+  margin-bottom: 8px;
+}
+
+.poll-settings > p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+  margin: 0 0 15px;
+}
+
+.date-limit-controls {
+  display: grid;
+  grid-template-columns: minmax(130px, 1fr) 96px;
+  align-items: end;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.date-limit-controls > label:first-child {
+  grid-column: 1 / -1;
+}
+
+.date-limit-controls input[type="number"] {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+}
+
+.date-limit-controls input[type="number"]:disabled {
+  background: #eef2f6;
+  color: var(--muted);
+}
+
+.unlimited-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  margin: 0;
+  color: var(--blue);
+  font-size: 13px;
+}
+
+.unlimited-option input {
+  accent-color: var(--blue);
+}
+
 .manage-responses h2 {
   margin-bottom: 8px;
 }

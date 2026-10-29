@@ -9,7 +9,7 @@ const formatter = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numer
 const dayFormat = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long" });
 
 let remoteResponses = {}, db = null, auth = null, firebaseProjectId = "", firebaseReady = false, isSaving = false, unsubscribeResponses = null;
-let selectedName = "", draft = [], pollKey = "2026-09", month = new Date(2026, 8, 1), pollClosed = false, chosenMeetingDate = "";
+let selectedName = "", draft = [], pollKey = "2026-09", month = new Date(2026, 8, 1), pollClosed = false, chosenMeetingDate = "", maxDatesPerPerson = 3;
 
 function key(date) { return date.toISOString().slice(0, 10); }
 function pollId() { return `encontro-${pollKey}`; }
@@ -17,6 +17,14 @@ function pollDate() { const [year, monthNumber] = pollKey.split("-").map(Number)
 function initials(name) { return name.split(" ").map(word => word[0]).join("").slice(0, 2).toUpperCase(); }
 function prettyDate(dateKey) { return dayFormat.format(new Date(`${dateKey}T12:00:00`)).replace(/^(.)/, (_, character) => character.toUpperCase()); }
 function prettyMonth(value) { const [year, monthNumber] = value.split("-").map(Number); return formatter.format(new Date(year, monthNumber - 1, 1)).replace(/^(.)/, (_, character) => character.toUpperCase()); }
+function dateLimitLabel() { return maxDatesPerPerson === null ? "sem limite de datas" : `até ${maxDatesPerPerson} ${maxDatesPerPerson === 1 ? "data" : "datas"}`; }
+function setSelectionHint() {
+  const hint = qs("#selectionHint");
+  if (!hint) return;
+  hint.textContent = maxDatesPerPerson === null
+    ? "Escolha todas as datas em que você consegue participar. Para alterar, toque novamente em uma data marcada."
+    : `Escolha ${dateLimitLabel()} em que você consegue participar. Para alterar, toque novamente em uma data marcada.`;
+}
 function allResponses() { return { ...remoteResponses, ...(selectedName && draft.length ? { [selectedName]: draft } : {}) }; }
 function isPastPoll() { const today = new Date(); return pollClosed || pollDate() < new Date(today.getFullYear(), today.getMonth(), 1); }
 
@@ -30,6 +38,7 @@ function updateActivePoll() {
     ? `<span>Próximo encontro confirmado para</span> <strong>${prettyDate(chosenMeetingDate)}</strong>`
     : `<span>Votação aberta para o encontro de</span> <strong>${activeMonth}</strong>`;
   month = pollDate();
+  setSelectionHint();
 }
 function renderCalendar() {
   qs("#monthTitle").textContent = formatter.format(month);
@@ -123,8 +132,8 @@ calendar.addEventListener("click", event => {
   const button = event.target.closest("[data-day]");
   if (!button || isPastPoll()) return;
   const dateKey = button.dataset.day;
-  if (!draft.includes(dateKey) && draft.length >= 3) {
-    qs("#saveMessage").textContent = "Você pode escolher no máximo 3 datas. Para trocar, toque em uma data já marcada.";
+  if (!draft.includes(dateKey) && maxDatesPerPerson !== null && draft.length >= maxDatesPerPerson) {
+    qs("#saveMessage").textContent = `Você pode escolher ${dateLimitLabel()}. Para trocar, toque em uma data já marcada.`;
     return;
   }
   draft = draft.includes(dateKey) ? draft.filter(date => date !== dateKey) : [...draft, dateKey];
@@ -132,7 +141,7 @@ calendar.addEventListener("click", event => {
 });
 qs("#saveButton").onclick = async () => {
   if (!firebaseReady || !db) { qs("#saveMessage").textContent = "A votação online ainda não está conectada. Tente novamente em alguns segundos."; return; }
-  if (draft.length > 3) { qs("#saveMessage").textContent = "Cada participante pode escolher no máximo 3 datas."; return; }
+  if (maxDatesPerPerson !== null && draft.length > maxDatesPerPerson) { qs("#saveMessage").textContent = `Cada participante pode escolher ${dateLimitLabel()}.`; return; }
   isSaving = true; qs("#saveButton").disabled = true;
   try {
     await setDoc(doc(db, "polls", pollId(), "responses", selectedName), { name: selectedName, dates: [...draft].sort(), updatedAt: serverTimestamp() });
@@ -176,6 +185,11 @@ async function initializeFirebase() {
       const nextPoll = poll.key;
       pollClosed = poll.status === "closed";
       chosenMeetingDate = String(poll.chosenDate || "");
+      maxDatesPerPerson = poll.maxDates === null
+        ? null
+        : Number.isInteger(poll.maxDates) && poll.maxDates >= 1 && poll.maxDates <= 31
+          ? poll.maxDates
+          : 3;
       if (/^\d{4}-(0[1-9]|1[0-2])$/.test(nextPoll || "") && nextPoll !== pollKey) pollKey = nextPoll;
       subscribeToResponses();
     }, error => { console.error(error); subscribeToResponses(); });
