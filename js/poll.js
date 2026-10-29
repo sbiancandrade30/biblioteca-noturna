@@ -9,7 +9,7 @@ const formatter = new Intl.DateTimeFormat("pt-BR", { month: "long", year: "numer
 const dayFormat = new Intl.DateTimeFormat("pt-BR", { weekday: "long", day: "numeric", month: "long" });
 
 let remoteResponses = {}, db = null, auth = null, firebaseProjectId = "", firebaseReady = false, isSaving = false, unsubscribeResponses = null;
-let selectedName = "", draft = [], pollKey = "2026-09", month = new Date(2026, 8, 1), pollClosed = false, chosenMeetingDate = "", maxDatesPerPerson = 3;
+let selectedName = "", draft = [], draftWasEdited = false, pollKey = "2026-09", month = new Date(2026, 8, 1), pollClosed = false, chosenMeetingDate = "", maxDatesPerPerson = 3;
 
 function key(date) { return date.toISOString().slice(0, 10); }
 function pollId() { return `encontro-${pollKey}`; }
@@ -79,8 +79,13 @@ function renderResults() {
 }
 function refresh() { renderCalendar(); renderSummary(); renderResults(); }
 function syncName() {
-  selectedName = qs("#participantName").value;
-  draft = remoteResponses[selectedName] ? [...remoteResponses[selectedName]] : [];
+  const nextName = qs("#participantName").value;
+  const choosingNameAfterDates = !selectedName && Boolean(nextName) && draftWasEdited;
+  selectedName = nextName;
+  if (!choosingNameAfterDates) {
+    draft = remoteResponses[selectedName] ? [...remoteResponses[selectedName]] : [];
+    draftWasEdited = false;
+  }
   const notice = qs("#replaceNotice");
   notice.hidden = !selectedName || !remoteResponses[selectedName];
   notice.textContent = remoteResponses[selectedName] ? "Você já respondeu. Se quiser, pode ajustar os dias e salvar novamente." : "";
@@ -89,7 +94,7 @@ function syncName() {
 function subscribeToResponses() {
   if (unsubscribeResponses) unsubscribeResponses();
   const activeResponsePath = pollId();
-  remoteResponses = {}; selectedName = ""; draft = [];
+  remoteResponses = {}; selectedName = ""; draft = []; draftWasEdited = false;
   qs("#participantName").value = "";
   qs("#saveMessage").textContent = pollClosed && chosenMeetingDate
     ? `Votação encerrada. Encontro confirmado para ${prettyDate(chosenMeetingDate)}.`
@@ -99,7 +104,7 @@ function subscribeToResponses() {
   const applyResponseValues = values => {
     if (activeResponsePath !== pollId()) return;
     remoteResponses = { ...remoteResponses, ...Object.fromEntries(Object.entries(values).filter(([name]) => participants.includes(name))) };
-    if (selectedName && remoteResponses[selectedName] && !isSaving) draft = [...remoteResponses[selectedName]];
+    if (selectedName && remoteResponses[selectedName] && !isSaving && !draftWasEdited) draft = [...remoteResponses[selectedName]];
     refresh();
   };
   const applyResponses = snapshot => applyResponseValues(Object.fromEntries(snapshot.docs.map(item => [item.data().name, item.data().dates || []])));
@@ -137,6 +142,7 @@ calendar.addEventListener("click", event => {
     return;
   }
   draft = draft.includes(dateKey) ? draft.filter(date => date !== dateKey) : [...draft, dateKey];
+  draftWasEdited = true;
   refresh();
 });
 qs("#saveButton").onclick = async () => {
@@ -145,6 +151,7 @@ qs("#saveButton").onclick = async () => {
   isSaving = true; qs("#saveButton").disabled = true;
   try {
     await setDoc(doc(db, "polls", pollId(), "responses", selectedName), { name: selectedName, dates: [...draft].sort(), updatedAt: serverTimestamp() });
+    draftWasEdited = false;
     qs("#saveMessage").textContent = matchMedia("(max-width: 519px)").matches ? "Resposta registrada. Você pode alterar quando quiser." : "Resposta registrada. Você pode voltar e alterar quando quiser.";
   } catch (error) { console.error(error); qs("#saveMessage").textContent = "Não foi possível registrar sua resposta. Tente novamente."; }
   finally { isSaving = false; refresh(); }
